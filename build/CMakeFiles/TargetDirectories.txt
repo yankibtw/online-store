@@ -1,0 +1,3 @@
+C:/test/build/CMakeFiles/server.dir
+C:/test/build/CMakeFiles/ALL_BUILD.dir
+C:/test/build/CMakeFiles/ZERO_CHECK.dir

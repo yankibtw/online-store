@@ -1,0 +1,352 @@
+html{
+    scroll-behavior: smooth;
+    -webkit-scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+}
+
+html, body {
+    overflow: visible;
+}
+
+.header-style {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 48px 200px;
+}
+
+.header-style h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.header-navigation-text-style {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+.header-navigation-text-style li {
+    margin: 0 15px;
+}
+
+.header-navigation-text-style li a {
+    text-decoration: none;
+    color: #939393;
+    font-size: 19px;
+    font-weight: 500;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+}
+
+.header-navigation-text-style li a {
+    position: relative;
+    text-decoration: none;
+    color: #939393;
+    transition: color 0.3s ease;
+}
+
+.header-navigation-text-style li a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -5px;
+    width: 0%;
+    height: 2px;
+    background-color: #735CFF;
+    transition: all 0.3s ease-in-out;
+    transform: translateX(-50%);
+}
+
+.header-navigation-text-style li a:hover {
+    color: #000000;
+}
+
+.header-navigation-text-style li a:hover::after {
+    width: 100%;
+}
+
+.header-navigation-text-style li a.active {
+    color: #000000; 
+}
+
+.header-navigation-text-style li a.active::after {
+    width: 100%; 
+}
+
+.entrance-style-btn{
+    width: 87px;
+    height: 40px;
+    border-radius: 9px;
+    font-size: 18px;
+    font-weight: 500;
+    background-color: #ffffff;
+    border: solid; /* none */
+    border-width: 1px;
+    color: #939393;
+}
+
+.entrance-style-btn:hover{
+    transition: all 0.5s ease-in-out;
+    background-color: #735CFF;
+    color: #ffffff;
+    border: none;
+}
+
+.main-style{
+    margin: 78px 200px 0 200px;
+}
+
+.breadcrumb li {
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+}
+
+.breadcrumb li a{
+    text-decoration: none;
+    color: #000000;
+}
+
+.main-content{
+    display: flex;
+    justify-content: space-between;
+    gap: 100px;
+}
+
+.nav-panels{
+    min-width: 205px;
+}
+
+.nav-panels p{
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.list-group a{
+    margin-left: 8px;
+    color: #939393;
+    text-decoration: none;
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    line-height: 2.1;
+    transition: all 0.3s ease-in-out;
+    font-weight: 400;
+}
+
+.list-group a:hover{
+    color: #735CFF;
+}
+
+.accept-btn{
+    width: 100%;
+    height: 45px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    background-color: #735CFF;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+.accept-btn:hover{
+    background-color: #FFFFFF;
+    color:#735CFF;
+    border: solid;
+    border-width: 1px;
+}
+
+
+.d-flex button{
+    color:#735CFF;
+    border: solid;
+    border-width: 1px;
+    transition: all 0.3s ease-in-out;
+}
+
+.d-flex button:hover{
+    background-color:#735CFF;
+    border: none;
+    color: #fff;
+    border: solid;
+    border-width: 1px;
+}
+
+.dropdown{
+    display: flex;
+    padding: 8px 0 8px 0;
+    margin-bottom: 15px;
+    justify-content: end;
+}
+
+
+/*  */
+
+.new-catalog-cards{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 60px;
+}
+
+.card-css {
+    width: 230px;
+    height: 357px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    overflow: hidden;
+    text-align: center;
+    font-family: "Noto Sans", sans-serif;
+}
+.card-css img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+}
+
+.card-css-content {
+    padding: 10px;
+    display: inline-block;
+}
+
+.card-css-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.card-css-subtitle {
+    font-size: 14px;
+    color: #ABABAB;
+    margin-bottom: 5px;
+    
+}
+
+.sizes {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 10px;
+    color: #ABABAB;
+    justify-content: space-between;
+}
+
+.size {
+    font-size: 16px;
+    padding: 3px 6px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.size.active {
+    color: blue;
+    font-weight: bold;
+}
+
+.price {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.card-button {
+    display: block;
+    width: 100%;
+    border: none;
+    margin: 0 auto;
+    padding: 10px;
+    margin-top: 10px;
+    background: #735CFF;
+    color: white;
+    border: solid;
+    border-width: 1px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 15px;
+    transition: 0.5s;
+    text-align: center;
+}
+
+.card-button:hover{
+    background: #FFFFFF;
+    border: solid;
+    border-width: 1px;
+    color: #735CFF;
+}
+
+.footer-style{
+    margin-top: 100px;
+    background-color: #141414;
+}
+
+.footer-main{
+    margin: 0 200px;
+    display: flex;
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    color: #FFFFFF;
+    padding: 0 0;
+    justify-content: space-between;
+}
+
+.footer-main ul{
+    margin: 117px 0px;
+    padding: 0px 87px;
+}
+
+.footer-main li{
+    list-style: none;
+}
+
+.footer-main li a{
+    color: #FFFFFF;
+    text-decoration: none;
+    line-height: 3.5;
+    transition: all 0.3s ease-in-out;
+}
+
+.footer-main li a:hover{
+    color: #735CFF;
+}
+
+.footer-main li a img{
+    transition: all 0.3s ease-in-out;
+}
+
+.footer-main li a img:hover{
+    scale: 110%;
+}
+
+.another-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 200px;
+    color: #fff;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+}

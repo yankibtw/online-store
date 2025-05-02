@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/main-style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <title>Fear</title>
+</head>
+<body>
+    <header class="header-style">
+        <h1>TEXT LOGO | LOGO</h1>
+        <ul class="header-navigation-text-style">
+            <li><a href="#main-info" class="smooth-scroll">Главная</a></li>
+            <li><a href="#about-us" class="smooth-scroll">О нас</a></li>
+            <li><a href="/catalog">Каталог</a></li>
+            <li><a href="#footer">Контакты</a></li>   
+            <li style="padding-left: 95px;">
+                <button class="entrance-style-btn" onclick="openModal()">Вход</button>
+            </li>
+        </ul>
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal">
+                <span class="close-btn" onclick="closeModal()">×</span>
+                <h2>Создать аккаунт</h2>
+                <p>или<a href="#">войти в существующий</a></p>
+    
+                <input type="text" id="firstName" placeholder="Имя*" required>
+                <div class="error" id="firstNameError">Введите корректное имя (только буквы, минимум 2 символа)</div>
+    
+                <input type="text" id="lastName" placeholder="Фамилия*" required>
+                <div class="error" id="lastNameError">Введите корректную фамилию (только буквы, минимум 2 символа)</div>
+    
+                <input type="email" id="email" placeholder="E-mail">
+                <div class="error" id="emailError">Введите корректный e-mail</div>
+    
+                <input type="tel" id="phone" placeholder="Телефон">
+                <div class="error" id="phoneError">Введите корректный российский номер (+7 или 8 и 10 цифр)</div>
+    
+                <div class="password-container">
+                    <input type="password" id="password" placeholder="Пароль">
+                    <span class="toggle-password" onclick="togglePassword()">👁</span>
+                </div>
+                <div class="error" id="passwordError">Пароль должен быть минимум 6 символов</div>
+    
+                <button onclick="validateForm()">Создать аккаунт</button>
+            </div>
+        </div>
+    
+    </header>
+    <main class="main-style">
+        <div class="main-info">
+            <div class="left-info-panel" id="main-info">
+                <h1>Добро<br>пожаловать в <br><mark>Fear</mark></h1>
+                <p>Экономим Ваше время!<br>
+                    Предлагаем лучшие цены!<br>
+                    Доставляем в кратчайшие сроки!</p>
+                <div class="left-info-panel-buttons">
+                        <button>
+                            <img src="/static/img/main-img/shopping-bag.png" alt="Каталог">
+                            Каталог
+                        </button>
+                        <button style="margin-left: 24px;">
+                            <img src="/static/img/main-img/next-btn.png" alt="Далее">
+                            Далее
+                        </button>
+                </div>            
+            </div>
+            <div class="image-container">
+                <img class="image-large" src="/static/img/main-img/main-img.png" alt="Image 1">
+                <img class="image-small" src="/static/img/main-img/main-img-1.png" alt="Image 2">
+            </div>
+        </div>
+        <div class="new-info">
+            <div class="new-info-header">
+                <div class="new-info-title">
+                    <div style="display: flex; align-items: center;">
+                        <span class="some-box"></span>
+                        <h1>Новинки</h1>
+                    </div>
+                    <a href="">Перейти в каталог <img style="margin-left: 10px;"src="/static/img/main-img/stroke.png" alt=""></a>
+                </div>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            </div>
+            <div class="new-main-info">
+                <img src="/static/img/main-img/new-main-image.png" alt="">
+                <div class="new-catalog-cards">
+                    <div class="card">
+                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
+                        <div class="card-content">
+                            <div class="card-title">Название товара</div>
+                            <div class="card-subtitle">Бренд</div>
+                            <div class="sizes">
+                                <span class="size" onclick="selectSize(this)">XS</span>
+                                <span class="size" onclick="selectSize(this)">S</span>
+                                <span class="size" onclick="selectSize(this)">M</span>
+                                <span class="size" onclick="selectSize(this)">L</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                                <div class="price">2 719 р.</div>
+                                <div class="icons">🛒 ❤️</div>
+                            </div>
+                            <button class="button">Подробнее</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
+                        <div class="card-content">
+                            <div class="card-title">Название товара</div>
+                            <div class="card-subtitle">Бренд</div>
+                            <div class="sizes">
+                                <span class="size" onclick="selectSize(this)">XS</span>
+                                <span class="size" onclick="selectSize(this)">S</span>
+                                <span class="size" onclick="selectSize(this)">M</span>
+                                <span class="size" onclick="selectSize(this)">L</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                                <div class="price">2 719 р.</div>
+                                <div class="icons">🛒 ❤️</div>
+                            </div>
+                            <button class="button">Подробнее</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
+                        <div class="card-content">
+                            <div class="card-title">Название товара</div>
+                            <div class="card-subtitle">Бренд</div>
+                            <div class="sizes">
+                                <span class="size" onclick="selectSize(this)">XS</span>
+                                <span class="size" onclick="selectSize(this)">S</span>
+                                <span class="size" onclick="selectSize(this)">M</span>
+                                <span class="size" onclick="selectSize(this)">L</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                                <div class="price">2 719 р.</div>
+                                <div class="icons">🛒 ❤️</div>
+                            </div>
+                            <button class="button">Подробнее</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
+                        <div class="card-content">
+                            <div class="card-title">Название товара</div>
+                            <div class="card-subtitle">Бренд</div>
+                            <div class="sizes">
+                                <span class="size" onclick="selectSize(this)">XS</span>
+                                <span class="size" onclick="selectSize(this)">S</span>
+                                <span class="size" onclick="selectSize(this)">M</span>
+                                <span class="size" onclick="selectSize(this)">L</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                                <div class="price">2 719 р.</div>
+                                <div class="icons">🛒 ❤️</div>
+                            </div>
+                            <button class="button">Подробнее</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
+                        <div class="card-content">
+                            <div class="card-title">Название товара</div>
+                            <div class="card-subtitle">Бренд</div>
+                            <div class="sizes">
+                                <span class="size" onclick="selectSize(this)">XS</span>
+                                <span class="size" onclick="selectSize(this)">S</span>
+                                <span class="size" onclick="selectSize(this)">M</span>
+                                <span class="size" onclick="selectSize(this)">L</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                                <div class="price">2 719 р.</div>
+                                <div class="icons">🛒 ❤️</div>
+                            </div>
+                            <button class="button">Подробнее</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
+                        <div class="card-content">
+                            <div class="card-title">Название товара</div>
+                            <div class="card-subtitle">Бренд</div>
+                            <div class="sizes">
+                                <span class="size" onclick="selectSize(this)">XS</span>
+                                <span class="size" onclick="selectSize(this)">S</span>
+                                <span class="size" onclick="selectSize(this)">M</span>
+                                <span class="size" onclick="selectSize(this)">L</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                                <div class="price">2 719 р.</div>
+                                <div class="icons">🛒 ❤️</div>
+                            </div>
+                            <button class="button">Подробнее</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="category-info">
+            <div class="new-info-header">
+                <div class="new-info-title">
+                    <div style="display: flex; align-items: center;">
+                        <span class="some-box"></span>
+                        <h1>Категории</h1>
+                    </div>
+                    <a href="">Перейти в каталог <img style="margin-left: 10px;"src="/static/img/main-img/stroke.png" alt=""></a>
+                </div>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            </div>
+            <div class="category-cards">
+                <div class="c-card">
+                    <a href="#"><img src="/static/img/main-img/category-avatar.png" alt=""><br>Женское</a>
+                </div>
+                <div class="c-card">
+                    <a href="#"><img src="/static/img/main-img/category-avatar.png" alt=""><br>Женское</a>
+                </div>
+                <div class="c-card">
+                    <a href="#"><img src="/static/img/main-img/category-avatar.png" alt=""><br>Женское</a>
+                </div>
+                <div class="c-card">
+                    <a href="#"><img src="/static/img/main-img/category-avatar.png" alt=""><br>Женское</a>
+                </div>
+                <div class="c-card">
+                    <a href="#"><img src="/static/img/main-img/category-avatar.png" alt=""><br>Женское</a>
+                </div>
+            </div>
+        </div>
+        <div class="about-us-info" id="about-us">
+            <div class="new-info-header">
+                <div class="new-info-title">
+                    <div style="display: flex; align-items: center;">
+                        <span class="some-box"></span>
+                        <h1>О нас</h1>
+                    </div>
+                </div>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            </div>
+            <div class="about-us-main-content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Accumsan volutpat tristique metus, nibh massa quam iaculis lectus. A dui nam phasellus porttitor nisi. Eget a quam est, eget dictum nisi. Sit donec aenean vivamus sagittis, blandit. Eleifend bibendum aliquet orci risus, velit. Lectus tellus amet
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Accumsan volutpat tristique metus, nibh massa quam iaculis lectus. A dui nam phasellus porttitor nisi. Eget a quam est, eget dictum nisi. Sit donec aenean vivamus sagittis, blandit. Eleifend bibendum aliquet orci risus, velit. Lectus tellus amet
+                </p>
+                <div class="about-us-img">
+                    <img style="width: 416px; height: 411px;" src="/static/img/main-img/about-us-img.png" alt="">
+                    <img style="margin-top: 60px; width: 416px; height: 411px;" src="/static/img/main-img/about-us-img-1.png" alt="">
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer-style">
+            <ul class="footer-main">
+                <ul style="padding-left: 0;">
+                    <li style="font-weight: 600;">ИНФОРМАЦИЯ</li>
+                    <li style="margin-top: 30px"><a href="#">О нас</a></li>
+                    <li><a href="#">Условия оплаты и доставки</a></li>
+                    <li><a href="#">Политика конфиденциальности</a></li>
+                </ul>
+                <ul>
+                    <li style="font-weight: 600;">СЛУЖБА ПОДДЕРЖКИ</li>
+                    <li style="margin-top: 30px"><a href="#">Контактная информация</a></li>
+                    <li><a href="#">Возврат товара</a></li>
+                </ul>
+                <ul>
+                    <li style="font-weight: 600;">ЛИЧНЫЙ КАБИНЕТ</li>
+                    <li style="margin-top: 30px"><a href="#">Личный кабинет</a></li>
+                    <li><a href="#">История заказов</a></li>
+                </ul>
+                <ul>
+                    <li style="font-weight: 600;"> КОНТАКТЫ</li>
+                    <li style="display: flex; margin-top: 30px; gap: 20px">
+                        <a href="#"><img style="width: 41.77px; height: 43.21px;" src="/static/img/footer-img/instagram.png" alt=""></a>
+                        <a href="#"><img src="/static/img/footer-img/whatsapp.png" alt=""></a>
+                        <a href="#"><img src="/static/img/footer-img/tg.png" alt=""></a>
+                    </li>
+                </ul>
+            </ul>
+            <hr style="color:#FFFFFF; margin: 0 200px;">
+            <div class="another-info">
+                <p>Все материалы, размещенные на сайте, носят справочный характер и не являются<br>
+                    публичной офертой, определяемойположениями Статьи 437 Гражданского кодекса Российской Федерации. </p>
+                <p>Интернет-магазин www.fear.ru ©</p>
+            </div>
+    </footer>
+    <script>
+        document.querySelectorAll('.header-navigation-text-style li a').forEach(link => {
+        link.addEventListener('click', function() {
+            document.querySelectorAll('.header-navigation-text-style li a').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            this.classList.add('active');
+            });
+        });
+        function selectSize(element) {
+                document.querySelectorAll('.size').forEach(size => size.classList.remove('active'));
+                element.classList.add('active');
+        }
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener("click", function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute("href")).scrollIntoView({
+                    behavior: "smooth"
+                });
+            });
+        });
+
+        function openModal() {
+            document.getElementById("modalOverlay").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("modalOverlay").style.display = "none";
+        }
+
+        function togglePassword() {
+            let passwordField = document.getElementById("password");
+            passwordField.type = passwordField.type === "password" ? "text" : "password";
+        }
+        
+        function validateForm() {
+            let valid = true;
+
+            let firstName = document.getElementById("firstName").value.trim();
+            let lastName = document.getElementById("lastName").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let phone = document.getElementById("phone").value.trim();
+            let password = document.getElementById("password").value.trim();
+
+            let nameRegex = /^[А-Яа-яA-Za-z]{2,}$/; 
+            let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            let phoneRegex = /^(\+7|8)\d{10}$/;
+            let passwordMinLength = 6;
+
+            if (!nameRegex.test(firstName)) {
+                document.getElementById("firstNameError").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("firstNameError").style.display = "none";
+            }
+
+            if (!nameRegex.test(lastName)) {
+                document.getElementById("lastNameError").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("lastNameError").style.display = "none";
+            }
+
+            if (email && !emailRegex.test(email)) {
+                document.getElementById("emailError").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("emailError").style.display = "none";
+            }
+
+            if (phone && !phoneRegex.test(phone)) {
+                document.getElementById("phoneError").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("phoneError").style.display = "none";
+            }
+
+            if (password.length < passwordMinLength) {
+                document.getElementById("passwordError").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("passwordError").style.display = "none";
+            }
+
+            if (valid) {
+                const data = {
+                    username: email, 
+                    password,
+                    first_name: firstName,
+                    last_name: lastName,
+                    email,
+                    phone
+                };
+
+                fetch("/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(res => res.text())
+                .then(response => {
+                    alert(response); 
+                    closeModal(); 
+                })
+                .catch(console.error);
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+</body>
+</html>

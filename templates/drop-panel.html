@@ -1,0 +1,34 @@
+<div class="profile-container" style="padding-top: 10px;">
+    <!-- Иконка профиля -->
+    <div class="profile-icon" id="profileIcon">
+        <div class="circle"></div>
+        <div class="base"></div>
+        <p>Войти</p>
+    </div>
+
+    <!-- Выпадающая панель -->
+    <div class="profile-dropdown" id="profileDropdown">
+        <p>Войдите, чтобы делать покупки, отслеживать заказы и пользоваться персональными скидками.</p>
+        <button class="btn btn-primary">Войти или зарегистрироваться</button>
+        <button class="btn btn-secondary">Личный кабинет</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const profileIcon = document.getElementById("profileIcon");
+        const profileDropdown = document.getElementById("profileDropdown");
+
+        profileIcon.addEventListener("click", function (event) {
+            profileDropdown.classList.toggle("show");
+            event.stopPropagation(); // Предотвращаем всплытие события
+        });
+
+        // Закрытие панели при клике вне её
+        document.addEventListener("click", function (event) {
+            if (!profileDropdown.contains(event.target) && !profileIcon.contains(event.target)) {
+                profileDropdown.classList.remove("show");
+            }
+        });
+    });
+</script>

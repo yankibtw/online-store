@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/catalog-style.css"><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <title>Fear</title>
+</head>
+<body>
+    <header class="header-style">
+        <h1>TEXT LOGO | LOGO</h1>
+        <ul class="header-navigation-text-style">
+            <li><a href="/" class="smooth-scroll">Главная</a></li>
+            <li><a href="main.html#about-us" class="smooth-scroll">О нас</a></li>
+            <li><a href="#">Каталог</a></li>
+            <li><a href="#footer">Контакты</a></li>   
+            <li style="padding-left: 95px;">
+                <button class="entrance-style-btn">Вход</button>
+            </li>
+        </ul>
+    </header>
+    <main class="main-style">
+        <nav aria-label="breadcrumb" style="margin-bottom: 45px;">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="#">Главная</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Каталог</li>
+            </ol>
+        </nav>
+        <div class="main-content">
+            <div class="nav-panels">
+                <nav class="navbar">
+                    <div class="container-fluid" style="padding: 0;">
+                      <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск">
+                        <button class="btn" type="submit">Поиск</button>
+                      </form>
+                    </div>
+                  </nav>
+                <hr>
+                <p>Категории</p>
+                <div class="category-group">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group"><a href="#">Категория</a></li>
+                        <li class="list-group"><a href="#">Категория</a></li>
+                        <li class="list-group"><a href="#">Категория</a></li>
+                        <li class="list-group"><a href="#">Категория</a></li>
+                        <li class="list-group"><a href="#">Категория</a></li>
+                        <li class="list-group"><a href="#">Категория</a></li>
+                        <li class="list-group"><a href="#">Категория</a></li>
+                        <li class="list-group"><a href="#">Категория</a></li>
+                        <li class="list-group"><a href="#">Категория</a></li>
+                      </ul>
+                </div>
+                <hr>
+                <p>Цена</p>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">₽</span>
+                    <span class="input-group-text">0.00</span>
+                    <input type="text" class="form-control" aria-label="Сумма в рублях (с точкой и двумя десятичными знаками)">
+                  </div>          
+                  <div class="input-group">
+                    <input type="text" class="form-control" aria-label="Сумма в рублях (с точкой и двумя десятичными знаками)">
+                    <span class="input-group-text">₽</span>
+                    <span class="input-group-text">0.00</span>
+                </div>
+                <hr>
+                <button type="button" class="accept-btn">Применить</button>
+            </div>
+            <div class="catalog-content">
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Сортировать
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#">По цене</a></li>
+                      <li><a class="dropdown-item" href="#">По размеру</a></li>
+                      <li><a class="dropdown-item" href="#">По названию</a></li>
+                    </ul>
+                </div>
+                <div class="new-catalog-cards">
+                    <div class="card-css">
+                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
+                        <div class="card-css-content">
+                            <div class="card-css-title">Название товара</div>
+                            <div class="card-css-subtitle">Бренд</div>
+                            <div class="sizes">
+                                <span class="size" onclick="selectSize(this)">XS</span>
+                                <span class="size" onclick="selectSize(this)">S</span>
+                                <span class="size" onclick="selectSize(this)">M</span>
+                                <span class="size" onclick="selectSize(this)">L</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                                <div class="price">2 719 р.</div>
+                                <div class="icons">🛒 ❤️</div>
+                            </div>
+                            <a href="card.html" class="card-button">Подробнее</a>
+                        </div>
+                    </div>
+                    <div class="card-css">
+                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
+                        <div class="card-css-content">
+                            <div class="card-css-title">Название товара</div>
+                            <div class="card-css-subtitle">Бренд</div>
+                            <div class="sizes">
+                                <span class="size" onclick="selectSize(this)">XS</span>
+                                <span class="size" onclick="selectSize(this)">S</span>
+                                <span class="size" onclick="selectSize(this)">M</span>
+                                <span class="size" onclick="selectSize(this)">L</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                                <div class="price">2 719 р.</div>
+                                <div class="icons">🛒 ❤️</div>
+                            </div>
+                            <a href="card.html" class="card-button">Подробнее</a>
+                        </div>
+                    </div>
+                    <div class="card-css">
+                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
+                        <div class="card-css-content">
+                            <div class="card-css-title">Название товара</div>
+                            <div class="card-css-subtitle">Бренд</div>
+                            <div class="sizes">
+                                <span class="size" onclick="selectSize(this)">XS</span>
+                                <span class="size" onclick="selectSize(this)">S</span>
+                                <span class="size" onclick="selectSize(this)">M</span>
+                                <span class="size" onclick="selectSize(this)">L</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                                <div class="price">2 719 р.</div>
+                                <div class="icons">🛒 ❤️</div>
+                            </div>
+                            <a href="card.html" class="card-button">Подробнее</a>
+                        </div>
+                    </div>
+                    <div class="card-css">
+                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
+                        <div class="card-css-content">
+                            <div class="card-css-title">Название товара</div>
+                            <div class="card-css-subtitle">Бренд</div>
+                            <div class="sizes">
+                                <span class="size" onclick="selectSize(this)">XS</span>
+                                <span class="size" onclick="selectSize(this)">S</span>
+                                <span class="size" onclick="selectSize(this)">M</span>
+                                <span class="size" onclick="selectSize(this)">L</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                                <div class="price">2 719 р.</div>
+                                <div class="icons">🛒 ❤️</div>
+                            </div>
+                            <a href="card.html" class="card-button">Подробнее</a>
+                        </div>
+                    </div>
+                    <div class="card-css">
+                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
+                        <div class="card-css-content">
+                            <div class="card-css-title">Название товара</div>
+                            <div class="card-css-subtitle">Бренд</div>
+                            <div class="sizes">
+                                <span class="size" onclick="selectSize(this)">XS</span>
+                                <span class="size" onclick="selectSize(this)">S</span>
+                                <span class="size" onclick="selectSize(this)">M</span>
+                                <span class="size" onclick="selectSize(this)">L</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                                <div class="price">2 719 р.</div>
+                                <div class="icons">🛒 ❤️</div>
+                            </div>
+                            <a href="card.html" class="card-button">Подробнее</a>
+                        </div>
+                    </div>
+                    <div class="card-css">
+                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
+                        <div class="card-css-content">
+                            <div class="card-css-title">Название товара</div>
+                            <div class="card-css-subtitle">Бренд</div>
+                            <div class="sizes">
+                                <span class="size" onclick="selectSize(this)">XS</span>
+                                <span class="size" onclick="selectSize(this)">S</span>
+                                <span class="size" onclick="selectSize(this)">M</span>
+                                <span class="size" onclick="selectSize(this)">L</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                                <div class="price">2 719 р.</div>
+                                <div class="icons">🛒 ❤️</div>
+                            </div>
+                            <a href="card.html" class="card-button">Подробнее</a>
+                        </div>
+                    </div>
+                    <div class="card-css">
+                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
+                        <div class="card-css-content">
+                            <div class="card-css-title">Название товара</div>
+                            <div class="card-css-subtitle">Бренд</div>
+                            <div class="sizes">
+                                <span class="size" onclick="selectSize(this)">XS</span>
+                                <span class="size" onclick="selectSize(this)">S</span>
+                                <span class="size" onclick="selectSize(this)">M</span>
+                                <span class="size" onclick="selectSize(this)">L</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                                <div class="price">2 719 р.</div>
+                                <div class="icons">🛒 ❤️</div>
+                            </div>
+                            <a href="card.html" class="card-button">Подробнее</a>
+                        </div>
+                    </div>
+                    <div class="card-css">
+                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
+                        <div class="card-css-content">
+                            <div class="card-css-title">Название товара</div>
+                            <div class="card-css-subtitle">Бренд</div>
+                            <div class="sizes">
+                                <span class="size" onclick="selectSize(this)">XS</span>
+                                <span class="size" onclick="selectSize(this)">S</span>
+                                <span class="size" onclick="selectSize(this)">M</span>
+                                <span class="size" onclick="selectSize(this)">L</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                                <div class="price">2 719 р.</div>
+                                <div class="icons">🛒 ❤️</div>
+                            </div>
+                            <a href="card.html" class="card-button">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+                <nav aria-label="Page navigation example" style="margin-top: 100px;">
+                    <ul class="pagination justify-content-end">
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                        </a>
+                      </li>
+                      <li class="page-item"><a class="page-link active" href="#">1</a></li>
+                      <li class="page-item"><a class="page-link" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+            </div>
+        </div>
+    </main>
+    <footer class="footer-style">
+        <ul class="footer-main">
+            <ul style="padding-left: 0;">
+                <li style="font-weight: 600;">ИНФОРМАЦИЯ</li>
+                <li style="margin-top: 30px"><a href="#">О нас</a></li>
+                <li><a href="#">Условия оплаты и доставки</a></li>
+                <li><a href="#">Политика конфиденциальности</a></li>
+            </ul>
+            <ul>
+                <li style="font-weight: 600;">СЛУЖБА ПОДДЕРЖКИ</li>
+                <li style="margin-top: 30px"><a href="#">Контактная информация</a></li>
+                <li><a href="#">Возврат товара</a></li>
+            </ul>
+            <ul>
+                <li style="font-weight: 600;">ЛИЧНЫЙ КАБИНЕТ</li>
+                <li style="margin-top: 30px"><a href="#">Личный кабинет</a></li>
+                <li><a href="#">История заказов</a></li>
+            </ul>
+            <ul>
+                <li style="font-weight: 600;"> КОНТАКТЫ</li>
+                <li style="display: flex; margin-top: 30px; gap: 20px">
+                    <a href="#"><img style="width: 41.77px; height: 43.21px;" src="/static/img/footer-img/instagram.png" alt=""></a>
+                    <a href="#"><img src="/static/img/footer-img/whatsapp.png" alt=""></a>
+                    <a href="#"><img src="/static/img/footer-img/tg.png" alt=""></a>
+                </li>
+            </ul>
+        </ul>
+        <hr style="color:#FFFFFF; margin: 0 200px;">
+        <div class="another-info">
+            <p>Все материалы, размещенные на сайте, носят справочный характер и не являются<br>
+                публичной офертой, определяемойположениями Статьи 437 Гражданского кодекса Российской Федерации. </p>
+            <p>Интернет-магазин www.fear.ru ©</p>
+        </div>
+</footer>
+    <script>
+        function selectSize(element) {
+            document.querySelectorAll('.size').forEach(size => size.classList.remove('active'));
+            element.classList.add('active');
+        }
+    </script>
+    <script type="text/javascript" src="Scripts/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="Scripts/bootstrap.min.js"></script>
+</body>
+</html>

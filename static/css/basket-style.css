@@ -1,0 +1,246 @@
+html{
+    scroll-behavior: smooth;
+    -webkit-scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+}
+
+html, body {
+    overflow: visible;
+}
+
+.header-style {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 48px 200px;
+}
+
+.header-style h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.header-navigation-text-style {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+.header-navigation-text-style li {
+    margin: 0 15px;
+}
+
+.header-navigation-text-style li a {
+    text-decoration: none;
+    color: #939393;
+    font-size: 19px;
+    font-weight: 500;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+}
+
+.header-navigation-text-style li a {
+    position: relative;
+    text-decoration: none;
+    color: #939393;
+    transition: color 0.3s ease;
+}
+
+.header-navigation-text-style li a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -5px;
+    width: 0%;
+    height: 2px;
+    background-color: #735CFF;
+    transition: all 0.3s ease-in-out;
+    transform: translateX(-50%);
+}
+
+.header-navigation-text-style li a:hover {
+    color: #000000;
+}
+
+.header-navigation-text-style li a:hover::after {
+    width: 100%;
+}
+
+.header-navigation-text-style li a.active {
+    color: #000000; 
+}
+
+.header-navigation-text-style li a.active::after {
+    width: 100%; 
+}
+
+.entrance-style-btn{
+    width: 87px;
+    height: 40px;
+    border-radius: 9px;
+    font-size: 18px;
+    font-weight: 500;
+    background-color: #ffffff;
+    border: solid; /* none */
+    border-width: 1px;
+    color: #939393;
+}
+
+.entrance-style-btn:hover{
+    transition: all 0.5s ease-in-out;
+    background-color: #735CFF;
+    color: #ffffff;
+    border: none;
+}
+
+.main-style{
+    margin: 0 200px 0 200px;
+}
+
+.breadcrumb li {
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+}
+
+.breadcrumb li a{
+    text-decoration: none;
+    color: #000000;
+}
+
+.basket-content{
+    display: flex;
+    justify-content: space-between;
+}
+
+.basket-products{
+
+}
+
+.product{
+    display: flex;
+    border: solid;
+    border-radius: 8px;
+    border-color: #E8E8E8;
+    border-width: 1px;
+    padding: 20px;
+    margin-bottom: 60px;
+    width: 1120px;
+    justify-content: space-between;
+}
+
+.product img{
+    width: 155px;
+    height: 170px;
+    border-radius: 4px;
+}
+
+.product-information{
+    font-family: "Montserrat", sans-serif;
+    font-size: 24px;   
+}
+
+.product-information h1{
+    font-family: "Montserrat", sans-serif;
+    font-size: 24px;   
+}
+
+.product-information h5{
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;   
+    margin-top: 24px;
+}
+
+.product-another-content{
+    display: flex;
+    flex-direction: column;
+    align-content: stretch;
+    justify-content: space-between;
+}
+
+.product-actions{
+    display: flex;  
+    justify-content: end;
+    gap: 20px;
+}
+
+.product-inc{
+    display: flex;
+    gap: 11px;
+}
+
+.product-inc h4{
+    margin: 0;
+    font-family: "Montserrat", sans-serif;
+    font-size: 24px;
+}
+
+.product-inc a img{
+    width: 26px;
+    height: 26px;
+}
+
+.product-actions img{
+    width: 24px;
+    height: 24px;
+}
+
+.basket-products-info{
+    width: 270px;
+}
+
+.basket-products-info h1{
+    font-family: "Montserrat", sans-serif;
+    font-size: 30px;
+}
+
+.basket-products-info ul{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+    font-family: "Montserrat", sans-serif;
+    font-size: 20px;
+}
+
+.basket-products-info button{
+    font-family: "Montserrat", sans-serif;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: #DCDCDC;
+    margin-top: 25px;
+    width: 270px;
+    height: 60px;
+    transition: all 0.3s ease-in-out;
+    border-color: #DCDCDC;
+}
+
+.basket-products-info button:hover{
+    border: solid;
+    border-color: #DCDCDC;
+    background-color: #FFFFFF;
+    border-width: 1px;
+}
+
+.exit-data{
+    display: flex;
+    justify-content: space-between;
+    color: #8F8F8F;
+    font-family: "Montserrat", sans-serif;
+}
+
+.exit-data  h5{
+    font-size: 20px;
+}

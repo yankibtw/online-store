@@ -1,0 +1,10 @@
+^C:\TEST\BUILD\CMAKEFILES\949B264423110AEEB5D2F7498050E3A3\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/test -BC:/test/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/test/build/CrowServer.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

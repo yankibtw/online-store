@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/card-style.css"><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <title>Fear</title>
+</head>
+<body>
+    <header class="header-style">
+        <h1>TEXT LOGO | LOGO</h1>
+        <ul class="header-navigation-text-style">
+            <li><a href="#main-info" class="smooth-scroll">Главная</a></li>
+            <li><a href="#about-us" class="smooth-scroll">О нас</a></li>
+            <li><a href="catalog.html">Каталог</a></li>
+            <li><a href="#footer">Контакты</a></li>   
+            <li style="padding-left: 95px;">
+                <button class="entrance-style-btn">Вход</button>
+            </li>
+        </ul>
+    </header>
+    <main class="main-style">
+        <nav aria-label="breadcrumb" style="margin-bottom: 45px;">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="main.html">Главная</a></li>
+              <li class="breadcrumb-item"><a href="catalog.html">Каталог</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Название товара</li>
+            </ol>
+        </nav>
+        <div class="main-content">
+            <div id="carouselExampleIndicators" class="carousel slide">
+                <div class="carousel-indicators">
+                  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <img src="../img/card-img/main-photo.png" class="d-block w-100" alt="...">
+                  </div>
+                  <div class="carousel-item">
+                    <img src="../img/main-img/about-us-img.png" class="d-block w-100" alt="...">
+                  </div>
+                  <div class="carousel-item">
+                    <img src="../img/main-img/about-us-img-1.png" class="d-block w-100" alt="...">
+                  </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            <div class="card-info">
+                <h1>Название товара</h1>
+                <h4 style="margin-top: 45px;">Цена</h4>
+                <h2 style="font-weight: 900;">123 456₽</h2>
+                <hr style="margin: 40px 0">
+                <h4>Выберите размер</h4>
+                <div class="size-group" role="group" aria-label="Basic radio toggle button group">
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+                    <label class="btn" for="btnradio1">38</label>
+                  
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+                    <label class="btn" for="btnradio2">40</label>
+                  
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+                    <label class="btn" for="btnradio3">42</label>
+
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
+                    <label class="btn" for="btnradio4">44</label>
+
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
+                    <label class="btn" for="btnradio5">46</label>
+
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio6" autocomplete="off">
+                    <label class="btn" for="btnradio6">48</label>
+                </div>
+                <hr style="margin: 40px 0"> 
+                <div class="another-content">
+                    <h4>Состав</h4>
+                    <h6>Хлопок 93%, лайкра 7%</h6>
+                </div>
+                <div class="another-content">
+                   <h4>Артикул</h4>
+                        <h6>23423423423</h6>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 20px; margin-top: 30px;">
+            <button type="button" class="add-to-basket" id="liveToastBtn">В корзину</button>
+            <button class="add-to-favourite"><img src="../img/card-img/Heart.png" alt=""></button>
+            <button class="share"><img src="../img/card-img/ci_share.png" alt=""></button>
+        </div>
+        <div class="description">
+          <div class="tabs">
+            <div class="tab active" id="desc-tab" onclick="showContent('description')">Описание</div>
+            <div class="tab" id="reviews-tab" onclick="showContent('reviews')">Отзывы</div>
+          </div>
+          <div class="content">
+              <div id="description" class="tab-content" style="margin-top: 40px;">Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" 
+                для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров 
+                и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem Ipsum не только успешно пережил без заметных
+                 изменений пять веков, но и перешагнул в электронный дизайн. Его популяризации в новое время послужили публикация 
+                листов Letraset с образцами Lorem Ipsum в 60-х годах и, в более недавнее время, программы электронной вёрстки типа Aldus 
+                PageMaker, в шаблонах которых используется Lorem Ipsum.</div>
+              <div id="reviews" class="tab-content" style="display: none;">
+                <div class="review">
+                  <div class="user">
+                      <img src="../img/card-img/review.png" alt="User">
+                      <div class="user-info">
+                          <strong>Никита Панков</strong>
+                          <div class="review-mark">
+                            <p>Размер: XS</p>
+                            <div style="display: flex; gap: 30px">
+                              <div class="stars">★★★★★</div>
+                              <p>01.01.2025</p>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div style="margin-left: 120px;">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tortor luctus et consectetur augue.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tortor luctus et consectetur augue.
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tortor luctus et consectetur augue.
+                    </p>
+                    <div class="images" id="imageContainer"></div>
+                  </div>
+                </div>
+                <div class="review">
+                  <div class="user">
+                      <img src="../img/card-img/review.png" alt="User">
+                      <div class="user-info">
+                          <strong>Никита Панков</strong>
+                          <div class="review-mark">
+                            <p>Размер: XS</p>
+                            <div style="display: flex; gap: 30px">
+                              <div class="stars">★★★★★</div>
+                              <p>01.01.2025</p>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div style="margin-left: 120px;">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tortor luctus et consectetur augue.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tortor luctus et consectetur augue.
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tortor luctus et consectetur augue.
+                    </p>
+                    <div class="images" id="imageContainer"></div>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+          <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+              <img src="../img/card-img/notification-icon.png" class="rounded me-2" alt="...">
+              <strong class="me-auto">Оповещение</strong>
+              <small>Только что</small>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+            </div>
+            <div class="toast-body">
+              Товар был успешно добавлен в корзину!
+            </div>
+          </div>
+        </div>
+    </main>
+    <footer class="footer-style">
+      <ul class="footer-main">
+          <ul style="padding-left: 0;">
+              <li style="font-weight: 600;">ИНФОРМАЦИЯ</li>
+              <li style="margin-top: 30px"><a href="#">О нас</a></li>
+              <li><a href="#">Условия оплаты и доставки</a></li>
+              <li><a href="#">Политика конфиденциальности</a></li>
+          </ul>
+          <ul>
+              <li style="font-weight: 600;">СЛУЖБА ПОДДЕРЖКИ</li>
+              <li style="margin-top: 30px"><a href="#">Контактная информация</a></li>
+              <li><a href="#">Возврат товара</a></li>
+          </ul>
+          <ul>
+              <li style="font-weight: 600;">ЛИЧНЫЙ КАБИНЕТ</li>
+              <li style="margin-top: 30px"><a href="#">Личный кабинет</a></li>
+              <li><a href="#">История заказов</a></li>
+          </ul>
+          <ul>
+              <li style="font-weight: 600;"> КОНТАКТЫ</li>
+              <li style="display: flex; margin-top: 30px; gap: 20px">
+                  <a href="#"><img style="width: 41.77px; height: 43.21px;" src="../img/footer-img/instagram.png" alt=""></a>
+                  <a href="#"><img src="../img/footer-img/whatsapp.png" alt=""></a>
+                  <a href="#"><img src="../img/footer-img/tg.png" alt=""></a>
+              </li>
+          </ul>
+      </ul>
+      <hr style="color:#FFFFFF; margin: 0 200px;">
+      <div class="another-info">
+          <p>Все материалы, размещенные на сайте, носят справочный характер и не являются<br>
+              публичной офертой, определяемойположениями Статьи 437 Гражданского кодекса Российской Федерации. </p>
+          <p>Интернет-магазин www.fear.ru ©</p>
+      </div>
+    </footer>
+    <script>
+      function showContent(tab) {
+          document.getElementById('description').style.display = tab === 'description' ? 'block' : 'none';
+          document.getElementById('reviews').style.display = tab === 'reviews' ? 'block' : 'none';
+          
+          document.getElementById('desc-tab').classList.toggle('active', tab === 'description');
+          document.getElementById('reviews-tab').classList.toggle('active', tab === 'reviews');
+      }
+
+      const images = ["review-test.jpg", "review-test.jpg", "review-test.jpg", "review-test.jpg", "review-test.jpg"];
+        const imageContainer = document.getElementById("imageContainer");
+        
+        images.slice(0, 3).forEach(src => {
+            let img = document.createElement("img");
+            img.src = "../img/card-img/" + src;
+            img.alt = "Product image";
+            imageContainer.appendChild(img);
+        });
+        
+        if (images.length > 3) {
+            let morePhotos = document.createElement("div");
+            morePhotos.classList.add("more-photos");
+            morePhotos.textContent = `+${images.length - 3} фото`;
+            imageContainer.appendChild(morePhotos);
+      }
+      
+      const toastTrigger = document.getElementById('liveToastBtn')
+      const toastLiveExample = document.getElementById('liveToast')
+
+      if (toastTrigger) {
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+        toastTrigger.addEventListener('click', () => {
+          toastBootstrap.show()
+        })
+      }
+  </script>
+      <script type="text/javascript" src="Scripts/jquery-2.1.1.min.js"></script>
+      <script type="text/javascript" src="Scripts/bootstrap.min.js"></script>
+</body>
+</html>
