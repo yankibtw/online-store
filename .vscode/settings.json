@@ -100,7 +100,8 @@
         "cinttypes": "cpp",
         "stack": "cpp",
         "pqxx": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "valarray": "cpp"
     },
     "sqltools.connections": [
         {

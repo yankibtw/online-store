@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/card-style.css"><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="../css/card-style.css">
+    <link rel="stylesheet" href="/static/css/header.css">
+    <link rel="stylesheet" href="/static/css/footer.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
@@ -11,18 +14,7 @@
     <title>Fear</title>
 </head>
 <body>
-    <header class="header-style">
-        <h1>TEXT LOGO | LOGO</h1>
-        <ul class="header-navigation-text-style">
-            <li><a href="#main-info" class="smooth-scroll">Главная</a></li>
-            <li><a href="#about-us" class="smooth-scroll">О нас</a></li>
-            <li><a href="catalog.html">Каталог</a></li>
-            <li><a href="#footer">Контакты</a></li>   
-            <li style="padding-left: 95px;">
-                <button class="entrance-style-btn">Вход</button>
-            </li>
-        </ul>
-    </header>
+  {{> includes/header.html}}
     <main class="main-style">
         <nav aria-label="breadcrumb" style="margin-bottom: 45px;">
             <ol class="breadcrumb">
@@ -171,77 +163,10 @@
           </div>
         </div>
     </main>
-    <footer class="footer-style">
-      <ul class="footer-main">
-          <ul style="padding-left: 0;">
-              <li style="font-weight: 600;">ИНФОРМАЦИЯ</li>
-              <li style="margin-top: 30px"><a href="#">О нас</a></li>
-              <li><a href="#">Условия оплаты и доставки</a></li>
-              <li><a href="#">Политика конфиденциальности</a></li>
-          </ul>
-          <ul>
-              <li style="font-weight: 600;">СЛУЖБА ПОДДЕРЖКИ</li>
-              <li style="margin-top: 30px"><a href="#">Контактная информация</a></li>
-              <li><a href="#">Возврат товара</a></li>
-          </ul>
-          <ul>
-              <li style="font-weight: 600;">ЛИЧНЫЙ КАБИНЕТ</li>
-              <li style="margin-top: 30px"><a href="#">Личный кабинет</a></li>
-              <li><a href="#">История заказов</a></li>
-          </ul>
-          <ul>
-              <li style="font-weight: 600;"> КОНТАКТЫ</li>
-              <li style="display: flex; margin-top: 30px; gap: 20px">
-                  <a href="#"><img style="width: 41.77px; height: 43.21px;" src="../img/footer-img/instagram.png" alt=""></a>
-                  <a href="#"><img src="../img/footer-img/whatsapp.png" alt=""></a>
-                  <a href="#"><img src="../img/footer-img/tg.png" alt=""></a>
-              </li>
-          </ul>
-      </ul>
-      <hr style="color:#FFFFFF; margin: 0 200px;">
-      <div class="another-info">
-          <p>Все материалы, размещенные на сайте, носят справочный характер и не являются<br>
-              публичной офертой, определяемойположениями Статьи 437 Гражданского кодекса Российской Федерации. </p>
-          <p>Интернет-магазин www.fear.ru ©</p>
-      </div>
-    </footer>
-    <script>
-      function showContent(tab) {
-          document.getElementById('description').style.display = tab === 'description' ? 'block' : 'none';
-          document.getElementById('reviews').style.display = tab === 'reviews' ? 'block' : 'none';
-          
-          document.getElementById('desc-tab').classList.toggle('active', tab === 'description');
-          document.getElementById('reviews-tab').classList.toggle('active', tab === 'reviews');
-      }
-
-      const images = ["review-test.jpg", "review-test.jpg", "review-test.jpg", "review-test.jpg", "review-test.jpg"];
-        const imageContainer = document.getElementById("imageContainer");
-        
-        images.slice(0, 3).forEach(src => {
-            let img = document.createElement("img");
-            img.src = "../img/card-img/" + src;
-            img.alt = "Product image";
-            imageContainer.appendChild(img);
-        });
-        
-        if (images.length > 3) {
-            let morePhotos = document.createElement("div");
-            morePhotos.classList.add("more-photos");
-            morePhotos.textContent = `+${images.length - 3} фото`;
-            imageContainer.appendChild(morePhotos);
-      }
-      
-      const toastTrigger = document.getElementById('liveToastBtn')
-      const toastLiveExample = document.getElementById('liveToast')
-
-      if (toastTrigger) {
-        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
-        toastTrigger.addEventListener('click', () => {
-          toastBootstrap.show()
-        })
-      }
-  </script>
-      <script type="text/javascript" src="Scripts/jquery-2.1.1.min.js"></script>
-      <script type="text/javascript" src="Scripts/bootstrap.min.js"></script>
+    {{> includes/footer.html}}
+    <script src="../static/js/card.js"></script>
+    <script src="../static/js/header.js"></script>
+    <script type="text/javascript" src="Scripts/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="Scripts/bootstrap.min.js"></script>
 </body>
 </html>

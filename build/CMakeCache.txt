@@ -203,6 +203,9 @@ CrowServer_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 CrowServer_SOURCE_DIR:STATIC=C:/test
 
+//The directory containing a CMake configuration file for Libsodium.
+Libsodium_DIR:PATH=Libsodium_DIR-NOTFOUND
+
 //Arguments to supply to pkg-config
 PKG_CONFIG_ARGN:STRING=
 
@@ -229,6 +232,9 @@ PostgreSQL_LIBRARY_RELEASE:FILEPATH=C:/vcpkg/installed/x64-windows/debug/lib/lib
 // /usr/local/include/PostgreSQL/8.4 or C:/Program Files/PostgreSQL/8.4/include
 PostgreSQL_TYPE_INCLUDE_DIR:PATH=C:/vcpkg/installed/x64-windows/include/server
 
+//The directory containing a CMake configuration file for Sodium.
+Sodium_DIR:PATH=Sodium_DIR-NOTFOUND
+
 //Automatically copy dependencies into the output directory for
 // executables.
 VCPKG_APPLOCAL_DEPS:BOOL=ON
@@ -250,6 +256,12 @@ VCPKG_PREFER_SYSTEM_LIBS:BOOL=OFF
 
 //Enable the setup of CMAKE_PROGRAM_PATH to vcpkg paths
 VCPKG_SETUP_CMAKE_PROGRAM_PATH:BOOL=ON
+
+//Path to a library.
+VCPKG_SODIUM_LIBRARY_DEBUG:FILEPATH=C:/vcpkg/installed/x64-windows/debug/lib/libsodium.lib
+
+//Path to a library.
+VCPKG_SODIUM_LIBRARY_RELEASE:FILEPATH=C:/vcpkg/installed/x64-windows/lib/libsodium.lib
 
 //Vcpkg target triplet (ex. x86-windows)
 VCPKG_TARGET_TRIPLET:STRING=x64-windows
@@ -281,8 +293,14 @@ crow_DIR:PATH=C:/vcpkg/installed/x64-windows/share/crow
 //The directory containing a CMake configuration file for libpqxx.
 libpqxx_DIR:PATH=C:/vcpkg/installed/x64-windows/share/libpqxx
 
+//The directory containing a CMake configuration file for nlohmann_json.
+nlohmann_json_DIR:PATH=C:/vcpkg/installed/x64-windows/share/nlohmann_json
+
 //Path to a library.
 pkgcfg_lib_PQXX_pqxx:FILEPATH=C:/vcpkg/installed/x64-windows/debug/lib/pqxx.lib
+
+//The directory containing a CMake configuration file for unofficial-sodium.
+unofficial-sodium_DIR:PATH=C:/vcpkg/installed/x64-windows/share/unofficial-sodium
 
 
 ########################
@@ -433,6 +451,8 @@ FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[C:/vcpkg/installed/x64-windows/
 FIND_PACKAGE_MESSAGE_DETAILS_PostgreSQL:INTERNAL=[C:/vcpkg/installed/x64-windows/debug/lib/libpq.lib][C:/vcpkg/installed/x64-windows/include][ ][v16.4()]
 //Details about finding asio
 FIND_PACKAGE_MESSAGE_DETAILS_asio:INTERNAL=[C:/vcpkg/installed/x64-windows/include][v()]
+//Details about finding nlohmann_json
+FIND_PACKAGE_MESSAGE_DETAILS_nlohmann_json:INTERNAL=[C:/vcpkg/installed/x64-windows/share/nlohmann_json/nlohmann_jsonConfig.cmake][v3.11.3()]
 //ADVANCED property for variable: PKG_CONFIG_ARGN
 PKG_CONFIG_ARGN-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: PKG_CONFIG_EXECUTABLE

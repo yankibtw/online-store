@@ -43,5 +43,9 @@ C:/vcpkg/installed/x64-windows/share/libpqxx/libpqxx-config.cmake
 C:/vcpkg/installed/x64-windows/share/libpqxx/libpqxx-targets-debug.cmake
 C:/vcpkg/installed/x64-windows/share/libpqxx/libpqxx-targets-release.cmake
 C:/vcpkg/installed/x64-windows/share/libpqxx/libpqxx-targets.cmake
+C:/vcpkg/installed/x64-windows/share/nlohmann_json/nlohmann_jsonConfig.cmake
+C:/vcpkg/installed/x64-windows/share/nlohmann_json/nlohmann_jsonConfigVersion.cmake
+C:/vcpkg/installed/x64-windows/share/nlohmann_json/nlohmann_jsonTargets.cmake
 C:/vcpkg/installed/x64-windows/share/postgresql/vcpkg-cmake-wrapper.cmake
+C:/vcpkg/installed/x64-windows/share/unofficial-sodium/unofficial-sodiumConfig.cmake
 C:/vcpkg/scripts/buildsystems/vcpkg.cmake
