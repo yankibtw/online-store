@@ -3,6 +3,7 @@ C:/Program Files/CMake/share/cmake-4.0/Modules/CMakeCInformation.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/CMakeCXXInformation.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/CMakeCommonLanguageInclude.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/CMakeDependentOption.cmake
+C:/Program Files/CMake/share/cmake-4.0/Modules/CMakeFindDependencyMacro.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/CMakeGenericSystem.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/CMakeInitializeConfigs.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/CMakeLanguageInformation.cmake
@@ -15,7 +16,7 @@ C:/Program Files/CMake/share/cmake-4.0/Modules/Compiler/MSVC-CXX.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/Compiler/MSVC.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/FindPackageHandleStandardArgs.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/FindPackageMessage.cmake
-C:/Program Files/CMake/share/cmake-4.0/Modules/FindPkgConfig.cmake
+C:/Program Files/CMake/share/cmake-4.0/Modules/FindPostgreSQL.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/Internal/CMakeCLinkerInformation.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/Internal/CMakeCXXLinkerInformation.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/Internal/CMakeCommonLinkerInformation.cmake
@@ -31,9 +32,16 @@ C:/Program Files/CMake/share/cmake-4.0/Modules/Platform/Windows-MSVC-CXX.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/Platform/Windows-MSVC.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/Platform/Windows.cmake
 C:/Program Files/CMake/share/cmake-4.0/Modules/Platform/WindowsPaths.cmake
+C:/Program Files/CMake/share/cmake-4.0/Modules/SelectLibraryConfigurations.cmake
 C:/test/CMakeLists.txt
 C:/test/build/CMakeFiles/4.0.0-rc4/CMakeCCompiler.cmake
 C:/test/build/CMakeFiles/4.0.0-rc4/CMakeCXXCompiler.cmake
 C:/test/build/CMakeFiles/4.0.0-rc4/CMakeRCCompiler.cmake
 C:/test/build/CMakeFiles/4.0.0-rc4/CMakeSystem.cmake
+C:/vcpkg/installed/x64-windows/share/libpqxx/libpqxx-config-version.cmake
+C:/vcpkg/installed/x64-windows/share/libpqxx/libpqxx-config.cmake
+C:/vcpkg/installed/x64-windows/share/libpqxx/libpqxx-targets-debug.cmake
+C:/vcpkg/installed/x64-windows/share/libpqxx/libpqxx-targets-release.cmake
+C:/vcpkg/installed/x64-windows/share/libpqxx/libpqxx-targets.cmake
+C:/vcpkg/installed/x64-windows/share/postgresql/vcpkg-cmake-wrapper.cmake
 C:/vcpkg/scripts/buildsystems/vcpkg.cmake

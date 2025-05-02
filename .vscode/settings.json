@@ -99,6 +99,18 @@
         "text_encoding": "cpp",
         "cinttypes": "cpp",
         "stack": "cpp",
-        "pqxx": "cpp"
-    }
+        "pqxx": "cpp",
+        "ranges": "cpp"
+    },
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "online-store",
+            "username": "postgres",
+            "database": "online-store"
+        }
+    ]
 }

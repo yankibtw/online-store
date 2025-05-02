@@ -1,14 +1,20 @@
 cmake_minimum_required(VERSION 3.10)
 project(CrowServer)
-add_definitions(-DCROW_USE_STANDALONE_ASIO)
-
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(PQXX REQUIRED libpqxx)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# Указываем путь к заголовочным файлам Crow
+# Указываем путь к toolchain vcpkg
+set(CMAKE_TOOLCHAIN_FILE "C:/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
+
+# Определяем использование standalone Asio для Crow
+add_definitions(-DCROW_USE_STANDALONE_ASIO)
+
+# Подключаем заголовки Crow (если не через vcpkg)
 include_directories(${CMAKE_SOURCE_DIR}/include/crow)
-include_directories("C:/vcpkg/installed/x64-windows/include")
+
+# Только то, что установлено через vcpkg
+find_package(libpqxx CONFIG REQUIRED)
 
 add_executable(server src/main.cpp)
+
+target_link_libraries(server PRIVATE libpqxx::pqxx)
