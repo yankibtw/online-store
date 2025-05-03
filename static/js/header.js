@@ -54,6 +54,10 @@ function togglePassword(event) {
         input.type = "password";
     }
 }
+document.addEventListener("DOMContentLoaded", function () {
+    const isAuthenticated = document.cookie.includes("session_id") || localStorage.getItem("isAuthenticated") === "true";
+    toggleHeaderElements(isAuthenticated);
+});
 
 async function validateForm() {
     const data = {
@@ -87,11 +91,15 @@ async function validateForm() {
 
         if (response.ok) {
             const { sessionId } = await response.json();  
-            document.cookie = `session_id=${sessionId}; path=/; max-age=2592000`;
+
+            document.cookie = `session_id=${sessionId}; path=/; max-age=2592000`;  
+            localStorage.setItem("isAuthenticated", "true");
 
             alert("Registration successful!");
             closeModal();
             window.location.reload();
+
+            toggleHeaderElements(true);
         } else {
             const { error } = await response.json();
             alert("Error during registration: " + error);
@@ -100,6 +108,7 @@ async function validateForm() {
         alert("Network error: " + error.message);
     }
 }
+
 async function loginFormSubmit() {
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value.trim();
@@ -122,9 +131,10 @@ async function loginFormSubmit() {
         if (response.ok) {
             const data = await response.json(); 
             const { sessionId } = data; 
-            document.cookie = `session_id=${sessionId}; path=/; max-age=2592000`; 
 
+            document.cookie = `session_id=${sessionId}; path=/; max-age=2592000`;  
             localStorage.setItem("isAuthenticated", "true");
+
             toggleHeaderElements(true);
             closeModal();
         } else {
@@ -135,8 +145,6 @@ async function loginFormSubmit() {
         alert("Network error: " + error.message);
     }
 }
-
-
 
 function toggleHeaderElements(isLoggedIn) {
     document.getElementById("loginButtonWrapper").style.display = isLoggedIn ? "none" : "block";
@@ -151,9 +159,9 @@ function logout() {
     toggleHeaderElements(false); 
     
     fetch('/logout', { method: 'POST' })
-        .then(response => response.json())  // Теперь мы парсим JSON
+        .then(response => response.json())  
         .then(data => {
-            alert(data.message);  // Выводим сообщение, полученное от сервера
+            alert(data.message);  
         })
         .catch(error => {
             console.error("Error during logout:", error);
@@ -173,19 +181,6 @@ function toggleAccountMenu() {
     }
 }
 
-document.addEventListener('click', function (e) {
-    const menu = document.querySelector(".account-menu");
-    const icon = document.querySelector(".account-icon-wrapper");
-    if (menu && icon && !icon.contains(e.target) && !menu.contains(e.target)) {
-        menu.style.display = "none";
-    }
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
-    toggleHeaderElements(isAuthenticated);
-});
-
 function toggleError(id, condition) {
     const el = document.getElementById(id);
     if (condition) {
@@ -196,8 +191,3 @@ function toggleError(id, condition) {
         return false;
     }
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-    const isAuthenticated = document.cookie.includes("session_id");
-    toggleHeaderElements(isAuthenticated);
-});
