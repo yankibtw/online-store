@@ -15,10 +15,11 @@ public:
     bool registerUser(const std::string& firstName, const std::string& lastName,
                       const std::string& email, const std::string& phone,
                       const std::string& password);
-    std::optional<std::string> Database::authenticateUser(const std::string& email, const std::string& password);
+    std::optional<std::string> Database::authenticateUser(const std::string& email, const std::string& password, bool& userNotFound);
     std::string createSession(const std::string& user_id);
     bool checkSession(const std::string& session_id);
     bool deleteSession(const std::string& session_id);
+    bool isEmailAlreadyRegistered(const std::string& email);
 
 private:
     std::string generateSessionId();

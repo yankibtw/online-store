@@ -22,11 +22,11 @@
                     Предлагаем лучшие цены!<br>
                     Доставляем в кратчайшие сроки!</p>
                 <div class="left-info-panel-buttons">
-                        <button>
+                        <button onclick="window.location.href='/catalog'">
                             <img src="/static/img/main-img/shopping-bag.png" alt="Каталог">
                             Каталог
                         </button>
-                        <button style="margin-left: 24px;">
+                        <button style="margin-left: 24px;" onclick="window.location.href='#new'">
                             <img src="/static/img/main-img/next-btn.png" alt="Далее">
                             Далее
                         </button>
@@ -37,14 +37,14 @@
                 <img class="image-small" src="/static/img/main-img/main-img-1.png" alt="Image 2">
             </div>
         </div>
-        <div class="new-info">
+        <div class="new-info" id="new">
             <div class="new-info-header">
                 <div class="new-info-title">
                     <div style="display: flex; align-items: center;">
                         <span class="some-box"></span>
                         <h1>Новинки</h1>
                     </div>
-                    <a href="">Перейти в каталог <img style="margin-left: 10px;"src="/static/img/main-img/stroke.png" alt=""></a>
+                    <a href="/catalog">Перейти в каталог <img style="margin-left: 10px;"src="/static/img/main-img/stroke.png" alt=""></a>
                 </div>
                 <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
             </div>
@@ -66,7 +66,7 @@
                                 <div class="price">2 719 р.</div>
                                 <div class="icons">🛒 ❤️</div>
                             </div>
-                            <button class="button">Подробнее</button>
+                            <button class="button" onclick="window.location.href='/card'">Подробнее</button>
                         </div>
                     </div>
                     <div class="card">
@@ -84,7 +84,7 @@
                                 <div class="price">2 719 р.</div>
                                 <div class="icons">🛒 ❤️</div>
                             </div>
-                            <button class="button">Подробнее</button>
+                            <button class="button" onclick="window.location.href='/card'">Подробнее</button>
                         </div>
                     </div>
                     <div class="card">
@@ -102,7 +102,25 @@
                                 <div class="price">2 719 р.</div>
                                 <div class="icons">🛒 ❤️</div>
                             </div>
-                            <button class="button">Подробнее</button>
+                            <button class="button" onclick="window.location.href='/card'">Подробнее</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
+                        <div class="card-content">
+                            <div class="card-title">Название товара</div>
+                            <div class="card-subtitle">Бренд</div>
+                            <div class="sizes">
+                                <span class="size" onclick="selectSize(this)">XS</span>
+                                <span class="size" onclick="selectSize(this)">S</span>
+                                <span class="size" onclick="selectSize(this)">M</span>
+                                <span class="size" onclick="selectSize(this)">L</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                                <div class="price">2 719 р.</div>
+                                <div class="icons" >🛒 ❤️</div>
+                            </div>
+                            <button class="button" onclick="window.location.href='/card'">Подробнее</button>
                         </div>
                     </div>
                     <div class="card">
@@ -120,7 +138,7 @@
                                 <div class="price">2 719 р.</div>
                                 <div class="icons">🛒 ❤️</div>
                             </div>
-                            <button class="button">Подробнее</button>
+                            <button class="button" onclick="window.location.href='/card'">Подробнее</button>
                         </div>
                     </div>
                     <div class="card">
@@ -138,25 +156,7 @@
                                 <div class="price">2 719 р.</div>
                                 <div class="icons">🛒 ❤️</div>
                             </div>
-                            <button class="button">Подробнее</button>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
-                        <div class="card-content">
-                            <div class="card-title">Название товара</div>
-                            <div class="card-subtitle">Бренд</div>
-                            <div class="sizes">
-                                <span class="size" onclick="selectSize(this)">XS</span>
-                                <span class="size" onclick="selectSize(this)">S</span>
-                                <span class="size" onclick="selectSize(this)">M</span>
-                                <span class="size" onclick="selectSize(this)">L</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                                <div class="price">2 719 р.</div>
-                                <div class="icons">🛒 ❤️</div>
-                            </div>
-                            <button class="button">Подробнее</button>
+                            <button class="button" onclick="window.location.href='/card'">Подробнее</button>
                         </div>
                     </div>
                 </div>
@@ -169,25 +169,25 @@
                         <span class="some-box"></span>
                         <h1>Категории</h1>
                     </div>
-                    <a href="">Перейти в каталог <img style="margin-left: 10px;"src="/static/img/main-img/stroke.png" alt=""></a>
+                    <a href="/catalog">Перейти в каталог <img style="margin-left: 10px;"src="/static/img/main-img/stroke.png" alt=""></a>
                 </div>
                 <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
             </div>
             <div class="category-cards">
                 <div class="c-card">
-                    <a href="#"><img src="/static/img/main-img/category-avatar.png" alt=""><br>Женское</a>
+                    <a href="/catalog"><img src="/static/img/main-img/category-avatar.png" alt=""><br>Женское</a>
                 </div>
                 <div class="c-card">
-                    <a href="#"><img src="/static/img/main-img/category-avatar.png" alt=""><br>Женское</a>
+                    <a href="/catalog"><img src="/static/img/main-img/category-avatar.png" alt=""><br>Женское</a>
                 </div>
                 <div class="c-card">
-                    <a href="#"><img src="/static/img/main-img/category-avatar.png" alt=""><br>Женское</a>
+                    <a href="/catalog"><img src="/static/img/main-img/category-avatar.png" alt=""><br>Женское</a>
                 </div>
                 <div class="c-card">
-                    <a href="#"><img src="/static/img/main-img/category-avatar.png" alt=""><br>Женское</a>
+                    <a href="/catalog"><img src="/static/img/main-img/category-avatar.png" alt=""><br>Женское</a>
                 </div>
                 <div class="c-card">
-                    <a href="#"><img src="/static/img/main-img/category-avatar.png" alt=""><br>Женское</a>
+                    <a href="/catalog"><img src="/static/img/main-img/category-avatar.png" alt=""><br>Женское</a>
                 </div>
             </div>
         </div>

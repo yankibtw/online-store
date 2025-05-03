@@ -11,7 +11,7 @@ const images = ["review-test.jpg", "review-test.jpg", "review-test.jpg", "review
   
   images.slice(0, 3).forEach(src => {
       let img = document.createElement("img");
-      img.src = "../img/card-img/" + src;
+      img.src = "../static/img/card-img/" + src;
       img.alt = "Product image";
       imageContainer.appendChild(img);
   });

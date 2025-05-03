@@ -95,17 +95,17 @@ async function validateForm() {
             document.cookie = `session_id=${sessionId}; path=/; max-age=2592000`;  
             localStorage.setItem("isAuthenticated", "true");
 
-            alert("Registration successful!");
+            showToast("Регистрация прошла успешно!");
             closeModal();
             window.location.reload();
 
             toggleHeaderElements(true);
         } else {
             const { error } = await response.json();
-            alert("Error during registration: " + error);
+            showToast("Ошибка при регистрации!");
         }
     } catch (error) {
-        alert("Network error: " + error.message);
+        showToast("Ошибка при регистрации!");
     }
 }
 
@@ -116,8 +116,8 @@ async function loginFormSubmit() {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     let valid = true;
-    valid &= toggleError("loginEmailError", emailRegex.test(email));
-    valid &= toggleError("loginPasswordError", password.length >= 6);
+    valid &= toggleError("loginEmailError", emailRegex.test(email));  
+    valid &= toggleError("loginPasswordError", password.length >= 6);  
 
     if (!valid) return;
 
@@ -130,7 +130,7 @@ async function loginFormSubmit() {
 
         if (response.ok) {
             const data = await response.json(); 
-            const { sessionId } = data; 
+            const { sessionId } = data;
 
             document.cookie = `session_id=${sessionId}; path=/; max-age=2592000`;  
             localStorage.setItem("isAuthenticated", "true");
@@ -139,12 +139,24 @@ async function loginFormSubmit() {
             closeModal();
         } else {
             const { error } = await response.json();
-            alert("Error during login: " + error);
+
+            if (error === "User not found") {
+                document.getElementById("loginEmailError").textContent = "Пользователь с таким E-mail не найден.";
+                document.getElementById("loginEmailError").style.display = "block"; 
+                document.getElementById("loginPasswordError").style.display = "none"; 
+
+                showToast(error || "Ошибка при входе!");
+            } else {
+                document.getElementById("loginPasswordError").textContent = "Введен неверный пароль.";
+                document.getElementById("loginPasswordError").style.display = "block"; 
+                document.getElementById("loginEmailError").style.display = "none"; 
+            }
         }
     } catch (error) {
-        alert("Network error: " + error.message);
+        showToast("Ошибка при входе!");
     }
 }
+
 
 function toggleHeaderElements(isLoggedIn) {
     document.getElementById("loginButtonWrapper").style.display = isLoggedIn ? "none" : "block";
@@ -161,11 +173,9 @@ function logout() {
     fetch('/logout', { method: 'POST' })
         .then(response => response.json())  
         .then(data => {
-            alert(data.message);  
         })
         .catch(error => {
             console.error("Error during logout:", error);
-            alert("Error during logout");
         });
 }
 
@@ -190,4 +200,13 @@ function toggleError(id, condition) {
         el.style.display = "block";
         return false;
     }
+}
+
+function showToast(message) {
+    const toastBody = document.querySelector("#liveToast .toast-body");
+    toastBody.textContent = message;
+
+    const toastElement = document.getElementById("liveToast");
+    const toast = bootstrap.Toast.getOrCreateInstance(toastElement);
+    toast.show();
 }

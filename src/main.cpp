@@ -8,12 +8,11 @@ int main() {
 
     Database db("online-store", "postgres", "1234", "localhost", 5432);
     if (db.connect()) {
+        setupRoutes(app, db);
         std::cout << "Connection successful!" << std::endl;
     } else {
         std::cerr << "Failed to connect to the database!" << std::endl;
     }
-    
-    setupRoutes(app, db);
 
     app.port(18080).multithreaded().run();
 

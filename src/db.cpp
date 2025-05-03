@@ -59,24 +59,27 @@ bool Database::registerUser(const std::string& firstName, const std::string& las
     }
 }
 
-std::optional<std::string> Database::authenticateUser(const std::string& email, const std::string& password) {
+std::optional<std::string> Database::authenticateUser(const std::string& email, const std::string& password, bool& userNotFound) {
     try {
         pqxx::work W(*conn_);
         pqxx::result r = W.exec_params("SELECT id, password FROM users WHERE email=$1", email);
 
-        if (!r.empty()) {
-            std::string storedPassword = r[0]["password"].as<std::string>();
-            if (crypto_pwhash_str_verify(storedPassword.c_str(), password.c_str(), password.size()) == 0) {
-                return r[0]["id"].as<std::string>(); 
-            }
+        if (r.empty()) {
+            userNotFound = true;
+            return std::nullopt;
         }
+
+        std::string storedPassword = r[0]["password"].as<std::string>();
+        if (crypto_pwhash_str_verify(storedPassword.c_str(), password.c_str(), password.size()) != 0) {
+            return std::nullopt; 
+        }
+
+        return r[0]["id"].as<std::string>();
     } catch (const std::exception& e) {
         std::cerr << "Error authenticating user: " << e.what() << std::endl;
     }
-    return std::nullopt; 
+    return std::nullopt;
 }
-
-
 
 std::string Database::createSession(const std::string& user_id) {
     std::string session_id = generateSessionId();
@@ -133,4 +136,15 @@ std::string Database::hashPassword(const std::string& password) {
     }
 
     return std::string(hashed);
+}
+
+bool Database::isEmailAlreadyRegistered(const std::string& email) {
+    try {
+        pqxx::work W(*conn_);
+        pqxx::result r = W.exec_params("SELECT 1 FROM users WHERE email=$1", email);
+        return !r.empty();
+    } catch (const std::exception& e) {
+        std::cerr << "Error checking email registration: " << e.what() << std::endl;
+        return false; 
+    }
 }

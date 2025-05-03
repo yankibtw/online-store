@@ -27,43 +27,45 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
         return crow::mustache::load("catalog.html").render();
     });
 
+    CROW_ROUTE(app, "/card")([]() {
+        return crow::mustache::load("card.html").render();
+    });
+
     CROW_ROUTE(app, "/register").methods("POST"_method)
     ([&db](const crow::request& req) {
-        // Загружаем JSON из тела запроса
         auto x = crow::json::load(req.body);
         if (!x) {
             return crow::response(400, crow::json::wvalue{{"error", "Invalid JSON"}}.dump());
         }
     
-        // Извлекаем поля из JSON
         std::string firstName = x["firstName"].s();
         std::string lastName = x["lastName"].s();
         std::string email = x["email"].s();
         std::string phone = x["phone"].s();
         std::string password = x["password"].s();
     
-        // Проверяем, чтобы обязательные поля не были пустыми
         if (firstName.empty() || lastName.empty() || password.empty()) {
-            return crow::response(400, crow::json::wvalue{{"error", "First name, last name and password are required"}}.dump());
+            return crow::response(400, crow::json::wvalue{{"error", "First name, last name, and password are required"}}.dump());
         }
     
-        // Регистрация пользователя в базе данных
+        if (db.isEmailAlreadyRegistered(email)) {
+            return crow::response(400, crow::json::wvalue{{"error", "Email is already registered"}}.dump());
+        }
+
         if (db.registerUser(firstName, lastName, email, phone, password)) {
-            // Аутентифицируем пользователя сразу после регистрации
-            auto userIdOpt = db.authenticateUser(email, password);
+            bool userNotFound = false;
+            auto userIdOpt = db.authenticateUser(email, password, userNotFound);
+    
             if (userIdOpt) {
-                // Создаем сессию для аутентифицированного пользователя
                 std::string sessionId = db.createSession(*userIdOpt);
                 if (!sessionId.empty()) {
-                    // Формируем JSON-ответ
                     crow::json::wvalue response;
                     response["message"] = "Registration and login successful";
                     response["sessionId"] = sessionId;
     
-                    // Устанавливаем cookie для сессии
                     crow::response res(200);
                     res.set_header("Set-Cookie", "session_id=" + sessionId + "; Path=/; HttpOnly");
-                    res.write(response.dump());  // Сериализуем JSON в строку
+                    res.write(response.dump()); 
                     res.set_header("Content-Type", "application/json");
     
                     return res;
@@ -78,6 +80,7 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
         }
     });
     
+    
     CROW_ROUTE(app, "/login").methods("POST"_method)
     ([&db](const crow::request& req) {
         auto x = crow::json::load(req.body);
@@ -87,8 +90,10 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
     
         auto email = x["email"].s();
         auto password = x["password"].s();
+        
+        bool userNotFound = false;
+        auto userIdOpt = db.authenticateUser(email, password, userNotFound);
     
-        auto userIdOpt = db.authenticateUser(email, password);
         if (userIdOpt.has_value()) {
             std::string sessionId = db.createSession(*userIdOpt);
             if (!sessionId.empty()) {
@@ -98,10 +103,13 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
                 return res;
             }
         }
-        return crow::response(401, crow::json::wvalue{{"error", "Invalid credentials"}});
+    
+        if (userNotFound) {
+            return crow::response(404, crow::json::wvalue{{"error", "User not found"}});
+        }
+    
+        return crow::response(401, crow::json::wvalue{{"error", "Invalid password"}});
     });
-    
-    
     
     CROW_ROUTE(app, "/logout").methods("POST"_method)
     ([&db](const crow::request& req) {
@@ -113,16 +121,5 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
         }
         return crow::response(400, crow::json::wvalue{{"error", "No session"}});
     });
-    
-    
-    CROW_ROUTE(app, "/profile").methods("GET"_method)
-    ([&db](const crow::request& req) {
-        std::string session_id = extractSessionId(req.get_header_value("Cookie"));
-        if (!session_id.empty() && db.checkSession(session_id)) {
-            return crow::response(200, "Welcome to your profile");
-        }
-        return crow::response(401, "Unauthorized");        
-    });
-    
     
 }
