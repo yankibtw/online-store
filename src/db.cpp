@@ -1,10 +1,14 @@
 #include "include/db.hpp"
-#include <sodium.h>
 #include <iostream>
+#include <cstdlib>
+#include <random>
+#include <sstream>
+#include <iomanip>
+#include <sodium.h>
 
 Database::Database(const std::string& db_name, const std::string& db_user,
                    const std::string& db_password, const std::string& db_host, int db_port)
-    : db_name_(db_name), db_user_(db_user), db_password_(db_password), 
+    : db_name_(db_name), db_user_(db_user), db_password_(db_password),
       db_host_(db_host), db_port_(db_port), conn_(nullptr) {}
 
 Database::~Database() {
@@ -13,66 +17,41 @@ Database::~Database() {
     }
 }
 
-bool Database::connect() {
-    try {
-        std::string connection_string = "dbname=" + db_name_ +
-                                        " user=" + db_user_ + 
-                                        " password=" + db_password_ + 
-                                        " host=" + db_host_ + 
-                                        " port=" + std::to_string(db_port_);
-        
-        conn_ = new pqxx::connection(connection_string);
-        
-        if (conn_->is_open()) {
-            std::cout << "Connected to database: " << db_name_ << std::endl;
-            return true;
-        } else {
-            std::cerr << "Failed to connect to database!" << std::endl;
-        }
-    } catch (const std::exception& e) {
-        std::cerr << "Error connecting to database: " << e.what() << std::endl;
+std::string Database::generateSessionId() {
+    std::stringstream ss;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 255);
+
+    for (int i = 0; i < 16; ++i) {
+        ss << std::hex << std::setw(2) << std::setfill('0') << dis(gen);
     }
-    return false;
+    return ss.str();
 }
 
-pqxx::result Database::executeQuery(const std::string& query) {
-    pqxx::work txn(*conn_);
-    pqxx::result result = txn.exec(query);
-    txn.commit();
-    return result;
+bool Database::connect() {
+    try {
+        std::string connection_string = "dbname=" + db_name_ + " user=" + db_user_ + 
+                                        " password=" + db_password_ + " host=" + db_host_ + 
+                                        " port=" + std::to_string(db_port_);
+        conn_ = new pqxx::connection(connection_string);
+        return conn_->is_open();
+    } catch (const std::exception& e) {
+        std::cerr << "Connection failed: " << e.what() << std::endl;
+        return false;
+    }
 }
 
 bool Database::registerUser(const std::string& firstName, const std::string& lastName,
-    const std::string& email, const std::string& phone,
-    const std::string& password) {
-
+                            const std::string& email, const std::string& phone,
+                            const std::string& password) {
     try {
-        pqxx::work txn(*conn_);
-
-        pqxx::result check = txn.exec_params(
-            "SELECT id FROM users WHERE email = $1 OR phone = $2",
-            email.empty() ? nullptr : email,
-            phone.empty() ? nullptr : phone
+        pqxx::work W(*conn_);
+        W.exec_params(
+            "INSERT INTO users (first_name, last_name, email, phone, password) VALUES ($1, $2, $3, $4, $5)",
+            firstName, lastName, email, phone, hashPassword(password)
         );
-
-        if (!check.empty()) {
-            std::cerr << "User with this email or phone already exists." << std::endl;
-            return false;
-        }
-
-        std::string query = "INSERT INTO users (first_name, last_name, email, phone, password) "
-            "VALUES ($1, $2, $3, $4, $5)";
-
-        std::string hashedPassword = hashPassword(password);
-        
-        txn.exec_params(query, 
-            firstName, 
-            lastName,
-            email.empty() ? nullptr : email,
-            phone.empty() ? nullptr : phone,
-            hashedPassword
-        );
-        txn.commit();
+        W.commit();
         return true;
     } catch (const std::exception& e) {
         std::cerr << "Error registering user: " << e.what() << std::endl;
@@ -80,42 +59,78 @@ bool Database::registerUser(const std::string& firstName, const std::string& las
     }
 }
 
-bool Database::authenticateUser(const std::string& email, const std::string& password) {
+std::optional<std::string> Database::authenticateUser(const std::string& email, const std::string& password) {
     try {
-        pqxx::work txn(*conn_);
+        pqxx::work W(*conn_);
+        pqxx::result r = W.exec_params("SELECT id, password FROM users WHERE email=$1", email);
 
-        pqxx::result result = txn.exec_params(
-            "SELECT id, password FROM users WHERE email = $1", email
-        );
-
-        if (result.empty()) {
-            std::cerr << "User not found" << std::endl;
-            return false;
+        if (!r.empty()) {
+            std::string storedPassword = r[0]["password"].as<std::string>();
+            if (crypto_pwhash_str_verify(storedPassword.c_str(), password.c_str(), password.size()) == 0) {
+                return r[0]["id"].as<std::string>(); 
+            }
         }
-
-        std::string hashedPassword = result[0]["password"].as<std::string>();
-
-        if (crypto_pwhash_str_verify(hashedPassword.c_str(), password.c_str(), password.length()) != 0) {
-            std::cerr << "Invalid password" << std::endl;
-            return false;
-        }
-
-        return true;
     } catch (const std::exception& e) {
         std::cerr << "Error authenticating user: " << e.what() << std::endl;
+    }
+    return std::nullopt; 
+}
+
+
+
+std::string Database::createSession(const std::string& user_id) {
+    std::string session_id = generateSessionId();
+    try {
+        pqxx::work W(*conn_);
+        W.exec_params("INSERT INTO sessions (user_id, session_id) VALUES ($1, $2)", user_id, session_id);
+        W.commit();
+    } catch (const std::exception& e) {
+        std::cerr << "Error creating session: " << e.what() << std::endl;
+        session_id = "";
+    }
+    return session_id;
+}
+
+bool Database::checkSession(const std::string& session_id) {
+    try {
+        pqxx::work W(*conn_);
+        std::string query = "SELECT user_id FROM sessions WHERE session_id = '" + session_id + "'";
+        pqxx::result r = W.exec(query);
+        return !r.empty();
+    } catch (const std::exception& e) {
+        std::cerr << "Error checking session: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+bool Database::deleteSession(const std::string& session_id) {
+    try {
+        pqxx::work W(*conn_);
+        std::string query = "DELETE FROM sessions WHERE session_id = '" + session_id + "'";
+        W.exec(query);
+        W.commit();
+        return true;
+    } catch (const std::exception& e) {
+        std::cerr << "Error deleting session: " << e.what() << std::endl;
         return false;
     }
 }
 
 std::string Database::hashPassword(const std::string& password) {
-    unsigned char hash[crypto_pwhash_STRBYTES];
-    
+    if (sodium_init() < 0) {
+        throw std::runtime_error("Failed to initialize libsodium");
+    }
+
+    char hashed[crypto_pwhash_STRBYTES];
+
     if (crypto_pwhash_str(
-        reinterpret_cast<char*>(hash), password.c_str(), password.length(),
-        crypto_pwhash_OPSLIMIT_INTERACTIVE, crypto_pwhash_MEMLIMIT_INTERACTIVE) != 0) {
+            hashed,
+            password.c_str(),
+            password.size(),
+            crypto_pwhash_OPSLIMIT_INTERACTIVE,
+            crypto_pwhash_MEMLIMIT_INTERACTIVE) != 0) {
         throw std::runtime_error("Password hashing failed");
     }
-    
-    return std::string(reinterpret_cast<char*>(hash));
-}
 
+    return std::string(hashed);
+}

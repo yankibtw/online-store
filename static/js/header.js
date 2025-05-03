@@ -1,32 +1,22 @@
 document.querySelectorAll('.header-navigation-text-style li a').forEach(link => {
-    link.addEventListener('click', function() {
-        document.querySelectorAll('.header-navigation-text-style li a').forEach(el => {
-            el.classList.remove('active');
-        });
-        
+    link.addEventListener('click', function () {
+        document.querySelectorAll('.header-navigation-text-style li a').forEach(el => el.classList.remove('active'));
         this.classList.add('active');
+    });
+});
+
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener("click", function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth"
         });
     });
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener("click", function(e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute("href")).scrollIntoView({
-                behavior: "smooth"
-            });
-        });
-    });
-    
+});
+
 function openModal() {
     document.getElementById("modalOverlay").style.display = "flex";
-    document.getElementById("registerForm").style.display = "block";
-    document.getElementById("loginForm").style.display = "none";
-    document.getElementById("modalTitle").innerText = "Создать аккаунт";
-    document.getElementById("modalToggleText").innerHTML = 'или <a href="#" id="toggleToLogin">войти в существующий</a>';
-
-    document.getElementById("toggleToLogin").addEventListener('click', function(e) {
-        e.preventDefault();
-        toggleToLogin();
-    });
+    toggleToRegister();
 }
 
 function closeModal() {
@@ -38,8 +28,7 @@ function toggleToLogin() {
     document.getElementById("loginForm").style.display = "block";
     document.getElementById("modalTitle").innerText = "Войти в аккаунт";
     document.getElementById("modalToggleText").innerHTML = 'или <a href="#" id="toggleToRegister">создать новый аккаунт</a>';
-
-    document.getElementById("toggleToRegister").addEventListener('click', function(e) {
+    document.getElementById("toggleToRegister").addEventListener('click', function (e) {
         e.preventDefault();
         toggleToRegister();
     });
@@ -50,16 +39,20 @@ function toggleToRegister() {
     document.getElementById("registerForm").style.display = "block";
     document.getElementById("modalTitle").innerText = "Создать аккаунт";
     document.getElementById("modalToggleText").innerHTML = 'или <a href="#" id="toggleToLogin">войти в существующий</a>';
-
-    document.getElementById("toggleToLogin").addEventListener('click', function(e) {
+    document.getElementById("toggleToLogin").addEventListener('click', function (e) {
         e.preventDefault();
         toggleToLogin();
     });
 }
 
-function togglePassword() {
-    let passwordField = document.getElementById("password");
-    passwordField.type = passwordField.type === "password" ? "text" : "password";
+function togglePassword(event) {
+    const icon = event.target;
+    const input = icon.previousElementSibling;
+    if (input && input.type === "password") {
+        input.type = "text";
+    } else if (input) {
+        input.type = "password";
+    }
 }
 
 async function validateForm() {
@@ -73,117 +66,138 @@ async function validateForm() {
 
     let valid = true;
 
-    let nameRegex = /^[А-Яа-яA-Za-z]{2,}$/;
-    let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    let phoneRegex = /^(\+7|8)\d{10}$/;
-    let passwordMinLength = 6;
+    const nameRegex = /^[А-Яа-яA-Za-z]{2,}$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phoneRegex = /^(\+7|8)\d{10}$/;
 
-    if (!nameRegex.test(data.firstName)) {
-        document.getElementById("firstNameError").style.display = "block";
-        valid = false;
-    } else {
-        document.getElementById("firstNameError").style.display = "none";
-    }
-
-    if (!nameRegex.test(data.lastName)) {
-        document.getElementById("lastNameError").style.display = "block";
-        valid = false;
-    } else {
-        document.getElementById("lastNameError").style.display = "none";
-    }
-
-    if (data.email && !emailRegex.test(data.email)) {
-        document.getElementById("emailError").style.display = "block";
-        valid = false;
-    } else {
-        document.getElementById("emailError").style.display = "none";
-    }
-
-    if (data.phone && !phoneRegex.test(data.phone)) {
-        document.getElementById("phoneError").style.display = "block";
-        valid = false;
-    } else {
-        document.getElementById("phoneError").style.display = "none";
-    }
-
-    if (data.password.length < passwordMinLength) {
-        document.getElementById("passwordError").style.display = "block";
-        valid = false;
-    } else {
-        document.getElementById("passwordError").style.display = "none";
-    }
+    valid &= toggleError("firstNameError", nameRegex.test(data.firstName));
+    valid &= toggleError("lastNameError", nameRegex.test(data.lastName));
+    valid &= toggleError("emailError", !data.email || emailRegex.test(data.email));
+    valid &= toggleError("phoneError", !data.phone || phoneRegex.test(data.phone));
+    valid &= toggleError("passwordError", data.password.length >= 6);
 
     if (!valid) return;
 
     try {
         const response = await fetch('/register', {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
 
         if (response.ok) {
-            const result = await response.text();
-            alert(result);
+            const { sessionId } = await response.json();  
+            document.cookie = `session_id=${sessionId}; path=/; max-age=2592000`;
+
+            alert("Registration successful!");
             closeModal();
+            window.location.reload();
         } else {
-            const err = await response.text();
-            alert("Ошибка регистрации: " + err);
+            const { error } = await response.json();
+            alert("Error during registration: " + error);
         }
     } catch (error) {
-        alert("Ошибка сети: " + error.message);
+        alert("Network error: " + error.message);
     }
 }
-
 async function loginFormSubmit() {
-    const data = {
-        email: document.getElementById("loginEmail").value.trim(),
-        password: document.getElementById("loginPassword").value.trim(),
-    };
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value.trim();
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     let valid = true;
-
-    let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    let passwordMinLength = 6;
-
-    if (data.email && !emailRegex.test(data.email)) {
-        document.getElementById("loginEmailError").style.display = "block";
-        valid = false;
-    } else {
-        document.getElementById("loginEmailError").style.display = "none";
-    }
-
-    if (data.password.length < passwordMinLength) {
-        document.getElementById("loginPasswordError").style.display = "block";
-        valid = false;
-    } else {
-        document.getElementById("loginPasswordError").style.display = "none";
-    }
+    valid &= toggleError("loginEmailError", emailRegex.test(email));
+    valid &= toggleError("loginPasswordError", password.length >= 6);
 
     if (!valid) return;
 
     try {
         const response = await fetch('/login', {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
         });
 
         if (response.ok) {
-            const result = await response.text();
-            alert(result);
+            const data = await response.json(); 
+            const { sessionId } = data; 
+            document.cookie = `session_id=${sessionId}; path=/; max-age=2592000`; 
+
+            localStorage.setItem("isAuthenticated", "true");
+            toggleHeaderElements(true);
             closeModal();
         } else {
-            const err = await response.text();
-            alert("Ошибка авторизации: " + err);
+            const { error } = await response.json();
+            alert("Error during login: " + error);
         }
     } catch (error) {
-        alert("Ошибка сети: " + error.message);
+        alert("Network error: " + error.message);
     }
 }
 
+
+
+function toggleHeaderElements(isLoggedIn) {
+    document.getElementById("loginButtonWrapper").style.display = isLoggedIn ? "none" : "block";
+    document.getElementById("accountSection").style.display = isLoggedIn ? "block" : "none";
+    const menu = document.querySelector(".account-menu");
+    if (menu) menu.style.display = "none";
+}
+
+function logout() {
+    document.cookie = "session_id=; Max-Age=0; Path=/;"; 
+    localStorage.removeItem("isAuthenticated");  
+    toggleHeaderElements(false); 
     
+    fetch('/logout', { method: 'POST' })
+        .then(response => response.json())  // Теперь мы парсим JSON
+        .then(data => {
+            alert(data.message);  // Выводим сообщение, полученное от сервера
+        })
+        .catch(error => {
+            console.error("Error during logout:", error);
+            alert("Error during logout");
+        });
+}
+
+function setActive(element) {
+    document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+    element.classList.add('active');
+}
+
+function toggleAccountMenu() {
+    const menu = document.querySelector(".account-menu");
+    if (menu) {
+        menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+}
+
+document.addEventListener('click', function (e) {
+    const menu = document.querySelector(".account-menu");
+    const icon = document.querySelector(".account-icon-wrapper");
+    if (menu && icon && !icon.contains(e.target) && !menu.contains(e.target)) {
+        menu.style.display = "none";
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+    toggleHeaderElements(isAuthenticated);
+});
+
+function toggleError(id, condition) {
+    const el = document.getElementById(id);
+    if (condition) {
+        el.style.display = "none";
+        return true;
+    } else {
+        el.style.display = "block";
+        return false;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const isAuthenticated = document.cookie.includes("session_id");
+    toggleHeaderElements(isAuthenticated);
+});
