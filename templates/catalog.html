@@ -27,7 +27,7 @@
                 <nav class="navbar">
                     <div class="container-fluid" style="padding: 0;">
                       <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск">
+                        <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск" id="search">
                         <button class="btn" type="submit">Поиск</button>
                       </form>
                     </div>
@@ -73,151 +73,8 @@
                       <li><a class="dropdown-item" href="#">По названию</a></li>
                     </ul>
                 </div>
-                <div class="new-catalog-cards">
-                    <div class="card-css">
-                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
-                        <div class="card-css-content">
-                            <div class="card-css-title">Название товара</div>
-                            <div class="card-css-subtitle">Бренд</div>
-                            <div class="sizes">
-                                <span class="size" onclick="selectSize(this)">XS</span>
-                                <span class="size" onclick="selectSize(this)">S</span>
-                                <span class="size" onclick="selectSize(this)">M</span>
-                                <span class="size" onclick="selectSize(this)">L</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                                <div class="price">2 719 р.</div>
-                                <div class="icons">🛒 ❤️</div>
-                            </div>
-                            <a href="/card" class="card-button">Подробнее</a>
-                        </div>
-                    </div>
-                    <div class="card-css">
-                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
-                        <div class="card-css-content">
-                            <div class="card-css-title">Название товара</div>
-                            <div class="card-css-subtitle">Бренд</div>
-                            <div class="sizes">
-                                <span class="size" onclick="selectSize(this)">XS</span>
-                                <span class="size" onclick="selectSize(this)">S</span>
-                                <span class="size" onclick="selectSize(this)">M</span>
-                                <span class="size" onclick="selectSize(this)">L</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                                <div class="price">2 719 р.</div>
-                                <div class="icons">🛒 ❤️</div>
-                            </div>
-                            <a href="/card" class="card-button">Подробнее</a>
-                        </div>
-                    </div>
-                    <div class="card-css">
-                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
-                        <div class="card-css-content">
-                            <div class="card-css-title">Название товара</div>
-                            <div class="card-css-subtitle">Бренд</div>
-                            <div class="sizes">
-                                <span class="size" onclick="selectSize(this)">XS</span>
-                                <span class="size" onclick="selectSize(this)">S</span>
-                                <span class="size" onclick="selectSize(this)">M</span>
-                                <span class="size" onclick="selectSize(this)">L</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                                <div class="price">2 719 р.</div>
-                                <div class="icons">🛒 ❤️</div>
-                            </div>
-                            <a href="/card" class="card-button">Подробнее</a>
-                        </div>
-                    </div>
-                    <div class="card-css">
-                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
-                        <div class="card-css-content">
-                            <div class="card-css-title">Название товара</div>
-                            <div class="card-css-subtitle">Бренд</div>
-                            <div class="sizes">
-                                <span class="size" onclick="selectSize(this)">XS</span>
-                                <span class="size" onclick="selectSize(this)">S</span>
-                                <span class="size" onclick="selectSize(this)">M</span>
-                                <span class="size" onclick="selectSize(this)">L</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                                <div class="price">2 719 р.</div>
-                                <div class="icons">🛒 ❤️</div>
-                            </div>
-                            <a href="/card" class="card-button">Подробнее</a>
-                        </div>
-                    </div>
-                    <div class="card-css">
-                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
-                        <div class="card-css-content">
-                            <div class="card-css-title">Название товара</div>
-                            <div class="card-css-subtitle">Бренд</div>
-                            <div class="sizes">
-                                <span class="size" onclick="selectSize(this)">XS</span>
-                                <span class="size" onclick="selectSize(this)">S</span>
-                                <span class="size" onclick="selectSize(this)">M</span>
-                                <span class="size" onclick="selectSize(this)">L</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                                <div class="price">2 719 р.</div>
-                                <div class="icons">🛒 ❤️</div>
-                            </div>
-                            <a href="/card" class="card-button">Подробнее</a>
-                        </div>
-                    </div>
-                    <div class="card-css">
-                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
-                        <div class="card-css-content">
-                            <div class="card-css-title">Название товара</div>
-                            <div class="card-css-subtitle">Бренд</div>
-                            <div class="sizes">
-                                <span class="size" onclick="selectSize(this)">XS</span>
-                                <span class="size" onclick="selectSize(this)">S</span>
-                                <span class="size" onclick="selectSize(this)">M</span>
-                                <span class="size" onclick="selectSize(this)">L</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                                <div class="price">2 719 р.</div>
-                                <div class="icons">🛒 ❤️</div>
-                            </div>
-                            <a href="/card" class="card-button">Подробнее</a>
-                        </div>
-                    </div>
-                    <div class="card-css">
-                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
-                        <div class="card-css-content">
-                            <div class="card-css-title">Название товара</div>
-                            <div class="card-css-subtitle">Бренд</div>
-                            <div class="sizes">
-                                <span class="size" onclick="selectSize(this)">XS</span>
-                                <span class="size" onclick="selectSize(this)">S</span>
-                                <span class="size" onclick="selectSize(this)">M</span>
-                                <span class="size" onclick="selectSize(this)">L</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                                <div class="price">2 719 р.</div>
-                                <div class="icons">🛒 ❤️</div>
-                            </div>
-                            <a href="/card" class="card-button">Подробнее</a>
-                        </div>
-                    </div>
-                    <div class="card-css">
-                        <img src="/static/img/main-img/new-main-image.png" alt="Товар">
-                        <div class="card-css-content">
-                            <div class="card-css-title">Название товара</div>
-                            <div class="card-css-subtitle">Бренд</div>
-                            <div class="sizes">
-                                <span class="size" onclick="selectSize(this)">XS</span>
-                                <span class="size" onclick="selectSize(this)">S</span>
-                                <span class="size" onclick="selectSize(this)">M</span>
-                                <span class="size" onclick="selectSize(this)">L</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                                <div class="price">2 719 р.</div>
-                                <div class="icons">🛒 ❤️</div>
-                            </div>
-                            <a href="/card" class="card-button">Подробнее</a>
-                        </div>
-                    </div>
+                <div class="new-catalog-cards" id="catalog">
+                  {{> includes/card.html}}
                 </div>
                 <nav aria-label="Page navigation example" style="margin-top: 100px;">
                     <ul class="pagination justify-content-end">
@@ -240,6 +97,8 @@
         </div>
     </main>
     {{> includes/footer.html}}
+    <script>
+    </script>
     <script src="../static/js/catalog.js"></script>
     <script src="../static/js/header.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>

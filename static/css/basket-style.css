@@ -16,95 +16,6 @@ html, body {
     overflow: visible;
 }
 
-.header-style {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 48px 200px;
-}
-
-.header-style h1 {
-    font-size: 24px;
-    font-weight: 600;
-    margin: 0;
-}
-
-.header-navigation-text-style {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    align-items: center;
-}
-
-.header-navigation-text-style li {
-    margin: 0 15px;
-}
-
-.header-navigation-text-style li a {
-    text-decoration: none;
-    color: #939393;
-    font-size: 19px;
-    font-weight: 500;
-    transition: all 0.3s ease-in-out;
-    position: relative;
-}
-
-.header-navigation-text-style li a {
-    position: relative;
-    text-decoration: none;
-    color: #939393;
-    transition: color 0.3s ease;
-}
-
-.header-navigation-text-style li a::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    bottom: -5px;
-    width: 0%;
-    height: 2px;
-    background-color: #735CFF;
-    transition: all 0.3s ease-in-out;
-    transform: translateX(-50%);
-}
-
-.header-navigation-text-style li a:hover {
-    color: #000000;
-}
-
-.header-navigation-text-style li a:hover::after {
-    width: 100%;
-}
-
-.header-navigation-text-style li a.active {
-    color: #000000; 
-}
-
-.header-navigation-text-style li a.active::after {
-    width: 100%; 
-}
-
-.entrance-style-btn{
-    width: 87px;
-    height: 40px;
-    border-radius: 9px;
-    font-size: 18px;
-    font-weight: 500;
-    background-color: #ffffff;
-    border: solid; /* none */
-    border-width: 1px;
-    color: #939393;
-}
-
-.entrance-style-btn:hover{
-    transition: all 0.5s ease-in-out;
-    background-color: #735CFF;
-    color: #ffffff;
-    border: none;
-}
-
 .main-style{
     margin: 0 200px 0 200px;
 }
@@ -124,8 +35,14 @@ html, body {
     justify-content: space-between;
 }
 
-.basket-products{
-
+.title{
+    font-family: "Rubik", sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    color: #414141;
+    font-size: 48px;
+    width: 220px;
+    margin-bottom: 60px;
 }
 
 .product{

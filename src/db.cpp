@@ -148,3 +148,29 @@ bool Database::isEmailAlreadyRegistered(const std::string& email) {
         return false; 
     }
 }
+
+std::vector<Product> Database::getProducts(int limit) {
+    std::vector<Product> products;
+    try {
+        pqxx::work W(*conn_);
+        pqxx::result r = W.exec_params(
+            "SELECT p.id, p.name, b.name AS brand, pi.image_url, p.price "
+            "FROM products p "
+            "LEFT JOIN brands b ON p.brand_id = b.id "
+            "LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_main = true "
+            "LIMIT $1", limit);
+
+        for (auto row : r) {
+            Product p;
+            p.id = row["id"].as<int>();
+            p.name = row["name"].as<std::string>();
+            p.brand = row["brand"].is_null() ? "Без бренда" : row["brand"].as<std::string>();
+            p.image_url = row["image_url"].is_null() ? "/static/img/default.png" : row["image_url"].as<std::string>();
+            p.price = row["price"].as<double>();
+            products.push_back(p);
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Error fetching products: " << e.what() << std::endl;
+    }
+    return products;
+}

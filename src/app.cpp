@@ -1,4 +1,4 @@
-#include "include/app.hpp"
+#include "include\app.hpp"
 #include "..\include\crow\include\crow_all.h"
 
 std::string extractSessionId(const std::string& cookieHeader) {
@@ -29,6 +29,14 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
 
     CROW_ROUTE(app, "/card")([]() {
         return crow::mustache::load("card.html").render();
+    });
+
+    CROW_ROUTE(app, "/basket")([]() {
+        return crow::mustache::load("basket.html").render();
+    });
+
+    CROW_ROUTE(app, "/favourite")([]() {
+        return crow::mustache::load("favourite.html").render();
     });
 
     CROW_ROUTE(app, "/register").methods("POST"_method)
@@ -120,6 +128,22 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
             return crow::response(200, crow::json::wvalue{{"message", "Logged out"}});
         }
         return crow::response(400, crow::json::wvalue{{"error", "No session"}});
+    });
+    
+
+    CROW_ROUTE(app, "/api/products")
+    .methods("GET"_method)
+    ([&db]() {
+        auto products = db.getProducts();
+        crow::json::wvalue result;
+    
+        result = crow::json::wvalue::list(products.size());
+    
+        for (size_t i = 0; i < products.size(); ++i) {
+            result[i] = products[i].toJson();
+        }
+    
+        return crow::response(result);
     });
     
 }

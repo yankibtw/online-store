@@ -4,6 +4,25 @@
 #include <pqxx/pqxx>
 #include <string>
 #include <optional>
+#include "..\..\include\crow\include\crow_all.h"
+
+struct Product {
+    int id;
+    std::string name;
+    std::string brand;
+    std::string image_url;
+    double price;
+
+    crow::json::wvalue toJson() const {
+        crow::json::wvalue json;
+        json["id"] = id;
+        json["name"] = name;
+        json["brand"] = brand;
+        json["image_url"] = image_url;
+        json["price"] = price;
+        return json;
+    }
+};
 
 class Database {
 public:
@@ -15,11 +34,12 @@ public:
     bool registerUser(const std::string& firstName, const std::string& lastName,
                       const std::string& email, const std::string& phone,
                       const std::string& password);
-    std::optional<std::string> Database::authenticateUser(const std::string& email, const std::string& password, bool& userNotFound);
+    std::optional<std::string> authenticateUser(const std::string& email, const std::string& password, bool& userNotFound);
     std::string createSession(const std::string& user_id);
     bool checkSession(const std::string& session_id);
     bool deleteSession(const std::string& session_id);
     bool isEmailAlreadyRegistered(const std::string& email);
+    std::vector<Product> getProducts(int limit = 20);
 
 private:
     std::string generateSessionId();
