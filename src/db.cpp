@@ -174,3 +174,32 @@ std::vector<Product> Database::getProducts(int limit) {
     }
     return products;
 }
+
+Product Database::getProductById(int id) {
+    Product p;
+    try {
+        pqxx::work W(*conn_);
+        pqxx::result r = W.exec_params(
+            "SELECT p.id, p.name, COALESCE(b.name, 'Без бренда') AS brand, "
+            "COALESCE(pi.image_url, '/static/img/default.png') AS image_url, "
+            "p.price, COALESCE(p.description, '') AS description "
+            "FROM products p "
+            "LEFT JOIN brands b ON p.brand_id = b.id "
+            "LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_main = true "
+            "WHERE p.id = $1", id
+        );
+
+        if (!r.empty()) {
+            const auto& row = r[0];
+            p.id = row["id"].as<int>();
+            p.name = row["name"].as<std::string>();
+            p.brand = row["brand"].as<std::string>();
+            p.image_url = row["image_url"].as<std::string>();
+            p.price = row["price"].as<double>();
+            p.description = row["description"].as<std::string>();
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Error fetching product by ID: " << e.what() << std::endl;
+    }
+    return p;
+}

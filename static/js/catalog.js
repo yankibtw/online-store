@@ -1,7 +1,5 @@
-function selectSize(element) {
-    document.querySelectorAll('.size').forEach(size => size.classList.remove('active'));
-    element.classList.add('active');
-}
+let currentPage = 1;
+const productsPerPage = 6;
 
 document.querySelectorAll('.header-navigation-text-style li a').forEach(link => {
     link.addEventListener('click', function() {
@@ -12,101 +10,179 @@ document.querySelectorAll('.header-navigation-text-style li a').forEach(link => 
         this.classList.add('active');
         });
     });
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener("click", function(e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute("href")).scrollIntoView({
-                behavior: "smooth"
-            });
+    
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener("click", function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth"
         });
     });
-    
-    function openModal() {
-        document.getElementById("modalOverlay").style.display = "flex";
-    }
-    
-    function closeModal() {
-        document.getElementById("modalOverlay").style.display = "none";
-    }
-    
-    function togglePassword() {
-        let passwordField = document.getElementById("password");
-        passwordField.type = passwordField.type === "password" ? "text" : "password";
-    }
-    
-    async function validateForm() {
-        const data = {
-            firstName: document.getElementById("firstName").value.trim(),
-            lastName: document.getElementById("lastName").value.trim(),
-            email: document.getElementById("email").value.trim(),
-            phone: document.getElementById("phone").value.trim(),
-            password: document.getElementById("password").value.trim(),
-        };
-    
-        let valid = true;
-    
-        let nameRegex = /^[А-Яа-яA-Za-z]{2,}$/; 
-        let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        let phoneRegex = /^(\+7|8)\d{10}$/;
-        let passwordMinLength = 6;
-    
-        if (!nameRegex.test(data.firstName)) {
-            document.getElementById("firstNameError").style.display = "block";
-            valid = false;
-        } else {
-            document.getElementById("firstNameError").style.display = "none";
-        }
-    
-        if (!nameRegex.test(data.lastName)) {
-            document.getElementById("lastNameError").style.display = "block";
-            valid = false;
-        } else {
-            document.getElementById("lastNameError").style.display = "none";
-        }
-    
-        if (data.email && !emailRegex.test(data.email)) {
-            document.getElementById("emailError").style.display = "block";
-            valid = false;
-        } else {
-            document.getElementById("emailError").style.display = "none";
-        }
-    
-        if (data.phone && !phoneRegex.test(data.phone)) {
-            document.getElementById("phoneError").style.display = "block";
-            valid = false;
-        } else {
-            document.getElementById("phoneError").style.display = "none";
-        }
-    
-        if (data.password.length < passwordMinLength) {
-            document.getElementById("passwordError").style.display = "block";
-            valid = false;
-        } else {
-            document.getElementById("passwordError").style.display = "none";
-        }
-    
-        if (!valid) return;
-    
-        try {
-            const response = await fetch('/register', {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            });
-    
-            if (response.ok) {
-                const result = await response.text();
-                alert(result);
-                closeModal();
-                // Можно добавить перенаправление или обновление страницы
-                // window.location.href = '/';
-            } else {
-                const err = await response.text();
-                alert("Ошибка регистрации: " + err);
+});
+
+function setupSearch() {
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', function () {
+        const query = searchInput.value.toLowerCase().trim();
+
+        const filtered = allProducts.filter(product => {
+            const name = product.name.toLowerCase();
+            const brand = product.brand.toLowerCase();
+
+            const matches = name.split(' ').some(word => word.startsWith(query)) ||
+                            brand.split(' ').some(word => word.startsWith(query));
+
+            return matches;
+        });
+
+        currentPage = 1;
+        updateView(filtered);
+    });
+}      
+
+function setupSorting() {
+    document.querySelectorAll('#sort-menu .dropdown-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sortType = item.getAttribute('data-sort');
+            
+            const start = (currentPage - 1) * productsPerPage;
+            const end = start + productsPerPage;
+
+            let sorted = [...allProducts];
+
+            switch (sortType) {
+                case 'price-asc':
+                    sorted.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-desc':
+                    sorted.sort((a, b) => b.price - a.price);
+                    break;
+                case 'newest':
+                    sorted.sort((a, b) => b.id - a.id);
+                    break;
             }
-        } catch (error) {
-            alert("Ошибка сети: " + error.message);
-        }
+
+            const productsOnPage = sorted.slice(start, end);
+
+            renderProducts(productsOnPage);
+
+            const totalPages = Math.ceil(sorted.length / productsPerPage);
+            renderPagination(totalPages);
+        });
+    });
+}
+
+function setupPriceFilter() {
+    const minInput = document.getElementById('minPrice');
+    const maxInput = document.getElementById('maxPrice');
+    const filterBtn = document.getElementById('priceFilterBtn');
+
+    if (!minInput || !maxInput || !filterBtn) return;
+
+    filterBtn.addEventListener('click', () => {
+        const min = parseFloat(minInput.value) || 0;
+        const max = parseFloat(maxInput.value) || Infinity;
+
+        filteredByPrice = allProducts.filter(product => {
+            return product.price >= min && product.price <= max;
+        });
+
+        
+        currentPage = 1;
+        updateView(filteredByPrice);  
+    });
+}
+
+function setupSorting() {
+    document.querySelectorAll('#sort-menu .dropdown-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sortType = item.getAttribute('data-sort');
+
+            const start = (currentPage - 1) * productsPerPage;
+            const end = start + productsPerPage;
+
+            let productsOnPage = allProducts.slice(start, end);
+
+            switch (sortType) {
+                case 'price-asc':
+                    productsOnPage.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-desc':
+                    productsOnPage.sort((a, b) => b.price - a.price);
+                    break;
+                case 'newest':
+                    productsOnPage.sort((a, b) => b.id - a.id);
+                    break;
+            }
+
+            renderProducts(productsOnPage);
+
+            const totalPages = Math.ceil(allProducts.length / productsPerPage);
+            renderPagination(totalPages);
+        });
+    });
+}
+
+
+function renderPagination(totalPages) {
+    const paginationContainer = document.getElementById('pagination');
+    const pageLinksContainer = document.querySelector('#pagination');
+    
+    let pageLinks = '';
+    for (let i = 1; i <= totalPages; i++) {
+        pageLinks += `<li class="page-item" id="page${i}"><a class="page-link" href="#">${i}</a></li>`;
     }
+
+    pageLinksContainer.innerHTML = `
+        <li class="page-item" id="prevPage">
+            <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        ${pageLinks}
+        <li class="page-item" id="nextPage">
+            <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    `;
+
+    for (let i = 1; i <= totalPages; i++) {
+        const pageLink = document.getElementById(`page${i}`);
+        pageLink.addEventListener('click', () => {
+            currentPage = i;
+            updateView();
+        });
+    }
+
+    const prevPageBtn = document.getElementById('prevPage');
+    prevPageBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            updateView();
+        }
+    });
+
+    const nextPageBtn = document.getElementById('nextPage');
+    nextPageBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            updateView();
+        }
+    });
+}
+
+function updateView(filteredProducts = null) {
+    const productsToUse = filteredProducts || allProducts;
+    const start = (currentPage - 1) * productsPerPage;
+    const end = start + productsPerPage;
+    
+    renderProducts(productsToUse.slice(start, end));
+
+    const totalPages = Math.ceil(productsToUse.length / productsPerPage);
+    renderPagination(totalPages);
+}
+
+document.addEventListener('DOMContentLoaded', loadProducts);

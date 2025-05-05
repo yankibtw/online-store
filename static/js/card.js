@@ -1,5 +1,5 @@
 function showContent(tab) {
-    document.getElementById('description').style.display = tab === 'description' ? 'block' : 'none';
+    document.getElementById('product-description').style.display = tab === 'description' ? 'block' : 'none';
     document.getElementById('reviews').style.display = tab === 'reviews' ? 'block' : 'none';
     
     document.getElementById('desc-tab').classList.toggle('active', tab === 'description');
@@ -32,3 +32,28 @@ if (toastTrigger) {
     toastBootstrap.show()
   })
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  const params = new URLSearchParams(window.location.search);
+  const productId = params.get("id");
+
+  if (!productId) return;
+
+  fetch(`/api/product/${productId}`)
+      .then(response => {
+          if (!response.ok) throw new Error("Product not found");
+          return response.json();
+      })
+      .then(product => {
+        document.getElementById("product-name-br").textContent = product.name;
+          document.getElementById("product-name").textContent = product.name;
+          document.getElementById("product-brand").textContent = product.brand;
+          document.getElementById("product-image").src = product.image_url;
+          document.getElementById("product-price").textContent = product.price + " ₽";
+          document.getElementById("product-description").textContent = product.description;
+      })
+      .catch(err => {
+          console.error(err);
+          document.body.innerHTML = "<h2>Товар не найден</h2>";
+      });
+});

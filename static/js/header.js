@@ -90,22 +90,21 @@ async function validateForm() {
         });
 
         if (response.ok) {
-            const { sessionId } = await response.json();  
-
-            document.cookie = `session_id=${sessionId}; path=/; max-age=2592000`;  
+            const { sessionId } = await response.json();
+        
+            document.cookie = `session_id=${sessionId}; path=/; max-age=2592000`;
+        
             localStorage.setItem("isAuthenticated", "true");
-
-            showToast("Регистрация прошла успешно!");
+        
             closeModal();
-            window.location.reload();
-
+            window.location.reload();  
+        
             toggleHeaderElements(true);
         } else {
             const { error } = await response.json();
-            showToast("Ошибка при регистрации!");
         }
+        
     } catch (error) {
-        showToast("Ошибка при регистрации!");
     }
 }
 
@@ -145,7 +144,6 @@ async function loginFormSubmit() {
                 document.getElementById("loginEmailError").style.display = "block"; 
                 document.getElementById("loginPasswordError").style.display = "none"; 
 
-                showToast(error || "Ошибка при входе!");
             } else {
                 document.getElementById("loginPasswordError").textContent = "Введен неверный пароль.";
                 document.getElementById("loginPasswordError").style.display = "block"; 
@@ -153,10 +151,8 @@ async function loginFormSubmit() {
             }
         }
     } catch (error) {
-        showToast("Ошибка при входе!");
     }
 }
-
 
 function toggleHeaderElements(isLoggedIn) {
     document.getElementById("loginButtonWrapper").style.display = isLoggedIn ? "none" : "block";
@@ -169,7 +165,6 @@ function logout() {
     document.cookie = "session_id=; Max-Age=0; Path=/;"; 
     localStorage.removeItem("isAuthenticated");  
     toggleHeaderElements(false); 
-    
     fetch('/logout', { method: 'POST' })
         .then(response => response.json())  
         .then(data => {
@@ -178,6 +173,7 @@ function logout() {
             console.error("Error during logout:", error);
         });
 }
+
 
 function setActive(element) {
     document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
@@ -200,13 +196,4 @@ function toggleError(id, condition) {
         el.style.display = "block";
         return false;
     }
-}
-
-function showToast(message) {
-    const toastBody = document.querySelector("#liveToast .toast-body");
-    toastBody.textContent = message;
-
-    const toastElement = document.getElementById("liveToast");
-    const toast = bootstrap.Toast.getOrCreateInstance(toastElement);
-    toast.show();
 }

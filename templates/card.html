@@ -20,7 +20,7 @@
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="/">Главная</a></li>
               <li class="breadcrumb-item"><a href="/catalog">Каталог</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Название товара</li>
+              <li class="breadcrumb-item active" aria-current="page" id="product-name-br"></li>
             </ol>
         </nav>
         <div class="main-content">
@@ -32,7 +32,7 @@
                 </div>
                 <div class="carousel-inner">
                   <div class="carousel-item active">
-                    <img src="../static/img/card-img/main-photo.png" class="d-block w-100" alt="...">
+                    <img src="../static/img/card-img/main-photo.png" class="d-block w-100" alt="..." id="product-image">
                   </div>
                   <div class="carousel-item">
                     <img src="../static/img/main-img/about-us-img.png" class="d-block w-100" alt="...">
@@ -51,9 +51,9 @@
                 </button>
             </div>
             <div class="card-info">
-                <h1>Название товара</h1>
-                <h4 style="margin-top: 45px;">Цена</h4>
-                <h2 style="font-weight: 900;">123 456₽</h2>
+                <h1 id="product-name"></h1>
+                <h4 style="margin-top: 45px;" id="product-brand">Цена</h4>
+                <h2 style="font-weight: 900;" id="product-price">123 456₽</h2>
                 <hr style="margin: 40px 0">
                 <h4>Выберите размер</h4>
                 <div class="size-group" role="group" aria-label="Basic radio toggle button group">
@@ -88,7 +88,7 @@
         </div>
         <div style="display: flex; gap: 20px; margin-top: 30px;">
             <button type="button" class="add-to-basket" id="liveToastBtn">В корзину</button>
-            <button class="add-to-favourite"><img src="../static/img/card-img/Heart.png" alt=""></button>
+            <button class="add-to-favourite" id="favorite-btn"><img src="../static/img/card-img/Heart.png" alt="" id="favorite-btn"></button>
             <button class="share"><img src="../static/img/card-img/ci_share.png" alt=""></button>
         </div>
         <div class="description">
@@ -97,7 +97,7 @@
             <div class="tab" id="reviews-tab" onclick="showContent('reviews')">Отзывы</div>
           </div>
           <div class="content">
-              <div id="description" class="tab-content" style="margin-top: 40px;">Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" 
+              <div id="product-description" class="tab-content" style="margin-top: 40px;">Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" 
                 для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров 
                 и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem Ipsum не только успешно пережил без заметных
                  изменений пять веков, но и перешагнул в электронный дизайн. Его популяризации в новое время послужили публикация 
@@ -165,8 +165,5 @@
     </main>
     {{> includes/footer.html}}
     <script src="../static/js/card.js"></script>
-    <script src="../static/js/header.js"></script>
-    <script type="text/javascript" src="Scripts/jquery-2.1.1.min.js"></script>
-    <script type="text/javascript" src="Scripts/bootstrap.min.js"></script>
 </body>
 </html>

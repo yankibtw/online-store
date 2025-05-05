@@ -1,5 +1,7 @@
 #include "include\app.hpp"
 #include "..\include\crow\include\crow_all.h"
+#include <sstream>
+#include <iostream>
 
 std::string extractSessionId(const std::string& cookieHeader) {
     std::istringstream ss(cookieHeader);
@@ -45,17 +47,17 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
         if (!x) {
             return crow::response(400, crow::json::wvalue{{"error", "Invalid JSON"}}.dump());
         }
-    
+
         std::string firstName = x["firstName"].s();
         std::string lastName = x["lastName"].s();
         std::string email = x["email"].s();
         std::string phone = x["phone"].s();
         std::string password = x["password"].s();
-    
+
         if (firstName.empty() || lastName.empty() || password.empty()) {
             return crow::response(400, crow::json::wvalue{{"error", "First name, last name, and password are required"}}.dump());
         }
-    
+
         if (db.isEmailAlreadyRegistered(email)) {
             return crow::response(400, crow::json::wvalue{{"error", "Email is already registered"}}.dump());
         }
@@ -63,19 +65,19 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
         if (db.registerUser(firstName, lastName, email, phone, password)) {
             bool userNotFound = false;
             auto userIdOpt = db.authenticateUser(email, password, userNotFound);
-    
+
             if (userIdOpt) {
                 std::string sessionId = db.createSession(*userIdOpt);
                 if (!sessionId.empty()) {
                     crow::json::wvalue response;
                     response["message"] = "Registration and login successful";
                     response["sessionId"] = sessionId;
-    
+
                     crow::response res(200);
-                    res.set_header("Set-Cookie", "session_id=" + sessionId + "; Path=/; HttpOnly");
-                    res.write(response.dump()); 
+                    res.set_header("Set-Cookie", "session_id=" + sessionId + "; Path=/; HttpOnly; SameSite=Lax");
+                    res.write(response.dump());
                     res.set_header("Content-Type", "application/json");
-    
+
                     return res;
                 } else {
                     return crow::response(500, crow::json::wvalue{{"error", "Failed to create session"}}.dump());
@@ -87,63 +89,70 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
             return crow::response(500, crow::json::wvalue{{"error", "Registration failed"}}.dump());
         }
     });
-    
-    
+
     CROW_ROUTE(app, "/login").methods("POST"_method)
     ([&db](const crow::request& req) {
         auto x = crow::json::load(req.body);
         if (!x) {
             return crow::response(400, crow::json::wvalue{{"error", "Invalid JSON"}});
         }
-    
+
         auto email = x["email"].s();
         auto password = x["password"].s();
-        
+
         bool userNotFound = false;
         auto userIdOpt = db.authenticateUser(email, password, userNotFound);
-    
+
         if (userIdOpt.has_value()) {
             std::string sessionId = db.createSession(*userIdOpt);
             if (!sessionId.empty()) {
                 crow::response res(200);
-                res.set_header("Set-Cookie", "session_id=" + sessionId + "; Path=/; HttpOnly");
+                res.set_header("Set-Cookie", "session_id=" + sessionId + "; Path=/; HttpOnly; SameSite=Lax");
                 res.write(crow::json::wvalue{{"message", "Login successful"}, {"sessionId", sessionId}}.dump());
                 return res;
             }
         }
-    
+
         if (userNotFound) {
             return crow::response(404, crow::json::wvalue{{"error", "User not found"}});
         }
-    
+
         return crow::response(401, crow::json::wvalue{{"error", "Invalid password"}});
     });
-    
+
     CROW_ROUTE(app, "/logout").methods("POST"_method)
     ([&db](const crow::request& req) {
         std::string raw_cookie = req.get_header_value("Cookie");
-        std::string session_id = extractSessionId(raw_cookie); 
+        std::string session_id = extractSessionId(raw_cookie);
         if (!session_id.empty()) {
             db.deleteSession(session_id);
             return crow::response(200, crow::json::wvalue{{"message", "Logged out"}});
         }
         return crow::response(400, crow::json::wvalue{{"error", "No session"}});
     });
-    
 
-    CROW_ROUTE(app, "/api/products")
-    .methods("GET"_method)
+    CROW_ROUTE(app, "/api/products").methods("GET"_method)
     ([&db]() {
         auto products = db.getProducts();
         crow::json::wvalue result;
-    
+
         result = crow::json::wvalue::list(products.size());
-    
+
         for (size_t i = 0; i < products.size(); ++i) {
             result[i] = products[i].toJson();
         }
-    
+
         return crow::response(result);
     });
-    
+
+    CROW_ROUTE(app, "/api/product/<int>")
+    .methods("GET"_method)
+    ([&db](int productId) {
+        Product product = db.getProductById(productId);
+        if (product.id != 0) {
+            return crow::response(product.toJson());
+        } else {
+            return crow::response(404, "Product not found");
+        }
+    });
 }

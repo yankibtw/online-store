@@ -12,6 +12,7 @@ struct Product {
     std::string brand;
     std::string image_url;
     double price;
+    std::string description;
 
     crow::json::wvalue toJson() const {
         crow::json::wvalue json;
@@ -20,6 +21,7 @@ struct Product {
         json["brand"] = brand;
         json["image_url"] = image_url;
         json["price"] = price;
+        json["description"] = description;
         return json;
     }
 };
@@ -40,6 +42,7 @@ public:
     bool deleteSession(const std::string& session_id);
     bool isEmailAlreadyRegistered(const std::string& email);
     std::vector<Product> getProducts(int limit = 20);
+    Product Database::getProductById(int id);
 
 private:
     std::string generateSessionId();

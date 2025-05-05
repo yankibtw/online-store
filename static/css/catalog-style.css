@@ -17,7 +17,8 @@ html, body {
 }
 
 .main-style{
-    margin: 78px 200px 0 200px;
+    margin: 78px 200px 150px 200px;
+
 }
 
 .breadcrumb li {
@@ -102,13 +103,35 @@ html, body {
     justify-content: end;
 }
 
-
 /*  */
+
+.catalog-content{
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
 
 .new-catalog-cards{
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 60px;
+    flex-direction: row;            
+    flex-wrap: wrap;               
+    justify-content: flex-start;  
+    gap: 65px;
+    width: 1115px;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus,
+.dropdown-item.active,
+.dropdown-item:active {
+    background-color: #735CFF !important;
+    color: white !important;
+}
+
+.page-item a{
+    color: #000000;
+}
+
+.page-item a:hover{
+    color: #000000;
 }
