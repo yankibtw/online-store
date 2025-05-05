@@ -176,6 +176,7 @@ std::vector<Product> Database::getProducts(int limit) {
 }
 
 Product Database::getProductById(int id) {
+
     Product p;
     try {
         pqxx::work W(*conn_);
@@ -202,4 +203,55 @@ Product Database::getProductById(int id) {
         std::cerr << "Error fetching product by ID: " << e.what() << std::endl;
     }
     return p;
+}
+
+std::vector<crow::json::wvalue> Database::getReviewsByProduct(int productId) {
+    std::vector<crow::json::wvalue> reviews;
+    std::unordered_map<int, size_t> reviewIndexMap;
+
+    try {
+        pqxx::work txn(*conn_);
+
+        pqxx::result res = txn.exec_params(
+            R"(
+                SELECT r.id, r.user_name, r.review_text, r.selected_size, r.rating, r.review_date,
+                       ri.image_url
+                FROM reviews r
+                LEFT JOIN review_images ri ON r.id = ri.review_id
+                WHERE r.product_id = $1
+                ORDER BY r.review_date DESC, r.id, ri.id
+            )",
+            productId
+        );
+
+        for (const auto& row : res) {
+            int reviewId = row["id"].as<int>();
+
+            if (reviewIndexMap.find(reviewId) == reviewIndexMap.end()) {
+                crow::json::wvalue review;
+                review["userName"] = row["user_name"].c_str();
+                review["reviewText"] = row["review_text"].c_str();
+                review["selectedSize"] = row["selected_size"].is_null() ? "" : row["selected_size"].c_str();
+                review["rating"] = row["rating"].as<int>();
+                review["reviewDate"] = row["review_date"].c_str();
+                review["images"] = crow::json::wvalue::list();
+
+                reviewIndexMap[reviewId] = reviews.size();
+                reviews.push_back(std::move(review));
+            }
+
+            if (!row["image_url"].is_null()) {
+                size_t index = reviewIndexMap[reviewId];
+                auto& images = reviews[index]["images"];
+
+                if (images.size() < 8) {
+                    images[images.size()] = row["image_url"].c_str();
+                }
+            }
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "getReviewsByProduct error: " << e.what() << std::endl;
+    }
+
+    return reviews;
 }

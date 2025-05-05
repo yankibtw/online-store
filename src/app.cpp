@@ -154,5 +154,23 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
         } else {
             return crow::response(404, "Product not found");
         }
+    });    
+
+    CROW_ROUTE(app, "/api/reviews/<int>").methods("GET"_method)
+    ([&db](int productId) {
+        std::vector<crow::json::wvalue> reviews = db.getReviewsByProduct(productId);
+
+        if (reviews.empty()) {
+            return crow::response(404, "Отзывы не найдены");
+        }
+
+        crow::json::wvalue result;
+        result["reviews"] = crow::json::wvalue::list(reviews.size());
+        for (size_t i = 0; i < reviews.size(); ++i) {
+            result["reviews"][i] = std::move(reviews[i]);
+        }
+
+        return crow::response(result);
     });
+
 }

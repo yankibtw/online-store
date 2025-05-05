@@ -43,6 +43,7 @@ public:
     bool isEmailAlreadyRegistered(const std::string& email);
     std::vector<Product> getProducts(int limit = 20);
     Product Database::getProductById(int id);
+    std::vector<crow::json::wvalue> Database::getReviewsByProduct(int productId);
 
 private:
     std::string generateSessionId();
