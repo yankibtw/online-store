@@ -28,6 +28,16 @@ struct Product {
     }
 };
 
+struct CartProduct {
+    int cart_item_id;
+    int product_id;
+    std::string name;
+    double price;
+    std::optional<double> discount_price;
+    std::string image_url;
+    int quantity;
+};
+
 class Database {
 public:
     Database(const std::string& db_name, const std::string& db_user,
@@ -50,9 +60,9 @@ public:
     std::vector<Product> getFavoritesBySessionId(const std::string& session_id);
     bool removeFromFavorites(const std::string& session_id, int product_id);
     void addProductToCart(const std::string& session_id, int product_id);
-    std::vector<Product> getCartBySessionId(const std::string& session_id);
-    bool Database::removeFromCart(const std::string& session_id, int product_id);
-
+    std::vector<CartProduct> getCartBySessionId(const std::string& session_id);
+    bool removeFromCart(const std::string& session_id, int product_id);
+    void updateCartItemQuantity(int cart_item_id, int quantity);
 private:
     std::string generateSessionId();
     std::string hashPassword(const std::string& password);

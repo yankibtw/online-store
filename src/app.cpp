@@ -252,7 +252,7 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
             return crow::response(500, crow::json::wvalue{{"error", error_msg}});
         }
     });
-
+    
     CROW_ROUTE(app, "/api/cart").methods("GET"_method)
     ([&db](const crow::request& req) {
         std::string session_id = extractSessionId(req.get_header_value("Cookie"));
@@ -261,10 +261,17 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
             return crow::response(401, "Unauthorized");
         }
     
-        std::vector<Product> cartProducts = db.getCartBySessionId(session_id);
+        std::vector<CartProduct> cartProducts;
+        try {
+            cartProducts = db.getCartBySessionId(session_id);
+        } catch (const std::exception& e) {
+            return crow::response(500, std::string("Ошибка получения корзины: ") + e.what());
+        }
     
         if (cartProducts.empty()) {
-            return crow::response(200, "[]");
+            crow::json::wvalue emptyResponse;
+            emptyResponse["status"] = "empty";
+            return crow::response{emptyResponse};
         }
     
         crow::json::wvalue response = crow::json::wvalue::list(cartProducts.size());
@@ -272,20 +279,20 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
             const auto& product = cartProducts[i];
     
             response[i] = crow::json::wvalue{
-                {"id", product.id},
+                {"cart_item_id", product.cart_item_id},
+                {"product_id", product.product_id},
                 {"name", product.name},
-                {"brand", product.brand},
-                {"image_url", product.image_url},
                 {"price", product.price},
-                {"quantity", product.quantity}
+                {"discount_price", product.discount_price.has_value() ? crow::json::wvalue(*product.discount_price) : crow::json::wvalue(nullptr)},
+                {"image_url", product.image_url},
+                {"quantity", product.quantity} 
             };
         }
     
         return crow::response{response};
     });
-
-    CROW_ROUTE(app, "/api/cart/remove/<int>")
-    .methods("POST"_method)
+    
+    CROW_ROUTE(app, "/api/cart/remove/<int>").methods("POST"_method)
     ([&db](const crow::request& req, int item_id) {
         std::string session_id = extractSessionId(req.get_header_value("Cookie"));
         
@@ -300,6 +307,24 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
         }
     });
     
-
+    CROW_ROUTE(app, "/api/cart/update_quantity/<int>").methods("POST"_method)
+    ([&db](const crow::request& req, int cart_item_id) {
+        crow::json::rvalue body;
+        try {
+            body = crow::json::load(req.body);
+            if (!body || !body.has("quantity")) {
+                return crow::response(400, "Missing quantity field");
+            }
+            int new_quantity = body["quantity"].i();
+    
+            if (new_quantity <= 0) {
+                return crow::response(400, "Quantity must be positive");
+            }
+    
+            db.updateCartItemQuantity(cart_item_id, new_quantity);
+            return crow::response(200);
+        } catch (const std::exception& e) {
+            return crow::response(500, std::string("Ошибка при обновлении количества: ") + e.what());
+        }
+    });
 }
-

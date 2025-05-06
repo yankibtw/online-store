@@ -27,7 +27,7 @@ function renderProducts(products) {
             : '/static/img/default-image.png';
 
         const card = `
-            <div class="card" data-name="${product.name.toLowerCase()}" data-brand="${product.brand.toLowerCase()}">
+            <div class="some-card" data-name="${product.name.toLowerCase()}" data-brand="${product.brand.toLowerCase()}">
                 <div class="card-img-style">
                     <img src="${imageUrl}" alt="${product.name}">
                 </div>

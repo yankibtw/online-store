@@ -366,18 +366,24 @@ void Database::addProductToCart(const std::string& session_id, int product_id) {
         std::string user_id = user_res[0]["user_id"].as<std::string>();
 
         pqxx::result product_res = txn.exec_params(
-            "SELECT name, price FROM products WHERE id = $1", product_id
+            "SELECT name, price, discount_price FROM products WHERE id = $1", product_id
         );
 
         if (product_res.empty()) {
             throw std::runtime_error("Товар не найден");
         }
 
-        std::string product_name = product_res[0]["name"].as<std::string>();
-        double product_price = product_res[0]["price"].as<double>();
+        pqxx::result image_res = txn.exec_params(
+            "SELECT image_url FROM product_images WHERE product_id = $1 AND is_main = TRUE", product_id
+        );
+
+        std::string product_image_url = "/static/img/default-image.png";
+        if (!image_res.empty()) {
+            product_image_url = image_res[0]["image_url"].as<std::string>();
+        }
 
         pqxx::result exists_res = txn.exec_params(
-            "SELECT 1 FROM cart_items WHERE user_id = $1 AND product_id = $2",
+            "SELECT id FROM cart_items WHERE user_id = $1 AND product_id = $2",
             user_id, product_id
         );
 
@@ -388,9 +394,9 @@ void Database::addProductToCart(const std::string& session_id, int product_id) {
             );
         } else {
             txn.exec_params(
-                "INSERT INTO cart_items (user_id, product_id, product_name, product_price, quantity) "
-                "VALUES ($1, $2, $3, $4, 1)",
-                user_id, product_id, product_name, product_price
+                "INSERT INTO cart_items (user_id, product_id, quantity, created_at, updated_at) "
+                "VALUES ($1, $2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",
+                user_id, product_id
             );
         }
 
@@ -402,41 +408,57 @@ void Database::addProductToCart(const std::string& session_id, int product_id) {
     }
 }
 
-std::vector<Product> Database::getCartBySessionId(const std::string& session_id) {
-    std::vector<Product> products;
-    try {
-        pqxx::work W(*conn_);
-        pqxx::result r = W.exec_params(
-            "SELECT user_id FROM sessions WHERE session_id = $1",
-            session_id
-        );
+std::vector<CartProduct> Database::getCartBySessionId(const std::string& session_id) {
+    pqxx::work W(*conn_);
 
-        if (r.empty()) {
-            throw std::runtime_error("Сессия не найдена");
-        }
+    pqxx::result user_result = W.exec_params(
+        "SELECT user_id FROM sessions WHERE session_id = $1",
+        session_id
+    );
 
-        std::string user_id = r[0]["user_id"].as<std::string>();
-
-        r = W.exec_params(
-            "SELECT ci.id, ci.product_price, ci.quantity, "
-            "COALESCE(pi.image_url, '/static/img/default.png') AS image_url "
-            "FROM cart_items ci "
-            "JOIN product_images pi ON ci.product_id = pi.product_id AND pi.is_main = true "
-            "WHERE ci.user_id = $1",
-            user_id
-        );
-
-        for (auto row : r) {
-            Product p;
-            p.id = row["id"].as<int>();
-            p.price = row["product_price"].as<double>();
-            p.quantity = row["quantity"].as<int>();
-            products.push_back(p);
-        }
-    } catch (const std::exception& e) {
-        std::cerr << "Error fetching cart products: " << e.what() << std::endl;
+    if (user_result.empty()) {
+        throw std::runtime_error("Сессия не найдена");
     }
-    return products;
+
+    int user_id = user_result[0]["user_id"].as<int>();
+
+    pqxx::result r = W.exec_params(R"(
+        SELECT
+            ci.id AS cart_item_id,
+            p.id AS product_id,
+            p.name,
+            p.price,
+            p.discount_price,
+            COALESCE(pi.image_url, '/static/img/default.png') AS image_url,
+            ci.quantity 
+        FROM cart_items ci
+        JOIN products p ON ci.product_id = p.id
+        LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_main = true
+        WHERE ci.user_id = $1
+    )", user_id);
+
+    std::vector<CartProduct> items;
+
+    for (const auto& row : r) {
+        CartProduct item;
+        item.cart_item_id = row["cart_item_id"].as<int>();
+        item.product_id = row["product_id"].as<int>();
+        item.name = row["name"].as<std::string>();
+        item.price = row["price"].as<double>();
+
+        if (row["discount_price"].is_null()) {
+            item.discount_price = std::nullopt;
+        } else {
+            item.discount_price = row["discount_price"].as<double>();
+        }
+
+        item.image_url = row["image_url"].as<std::string>();
+        item.quantity = row["quantity"].as<int>(); 
+
+        items.push_back(item);
+    }
+
+    return items;
 }
 
 bool Database::removeFromCart(const std::string& session_id, int product_id) {
@@ -465,3 +487,10 @@ bool Database::removeFromCart(const std::string& session_id, int product_id) {
         return false; 
     }
 }
+
+void Database::updateCartItemQuantity(int cart_item_id, int quantity) {
+    pqxx::work W(*conn_);
+    W.exec_params("UPDATE cart_items SET quantity = $1 WHERE id = $2", quantity, cart_item_id);
+    W.commit();
+}
+
