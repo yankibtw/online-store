@@ -97,13 +97,13 @@
             <div class="tab" id="reviews-tab" onclick="showContent('reviews')">Отзывы</div>
           </div>
           <div class="content">
-              <div id="product-description" class="tab-content" style="margin-top: 40px;">Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" 
+              <div id="product-description" class="tab-content" style="margin-top: 40px; margin-bottom: 150px;">Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" 
                 для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров 
                 и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem Ipsum не только успешно пережил без заметных
                  изменений пять веков, но и перешагнул в электронный дизайн. Его популяризации в новое время послужили публикация 
                 листов Letraset с образцами Lorem Ipsum в 60-х годах и, в более недавнее время, программы электронной вёрстки типа Aldus 
                 PageMaker, в шаблонах которых используется Lorem Ipsum.</div>
-              <div id="reviews" class="tab-content" style="display: none;">
+              <div id="reviews" class="tab-content" style="display: none; margin-bottom: 150px;">
                 <div class="review">
                   <div class="user">
                       <img src="../static/img/card-img/review.png" alt="User">
@@ -126,25 +126,6 @@
                   </div>
                 </div>
                 <div class="review">
-                  <div class="user">
-                      <img src="../static/img/card-img/review.png" alt="User">
-                      <div class="user-info">
-                          <strong>Никита Панков</strong>
-                          <div class="review-mark">
-                            <p>Размер: XS</p>
-                            <div style="display: flex; gap: 30px">
-                              <div class="stars">★★★★★</div>
-                              <p>01.01.2025</p>
-                            </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div style="margin-left: 120px;">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tortor luctus et consectetur augue.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tortor luctus et consectetur augue.
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tortor luctus et consectetur augue.
-                    </p>
-                    <div class="images" id="imageContainer"></div>
-                  </div>
                 </div>
               </div>
           </div>
@@ -165,5 +146,6 @@
     </main>
     {{> includes/footer.html}}
     <script src="../static/js/card.js"></script>
+    <script src="../static/js/global.js"></script>
 </body>
 </html>

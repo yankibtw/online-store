@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/static/css/favourite-style.css">
     <link rel="stylesheet" href="/static/css/header.css">
     <link rel="stylesheet" href="/static/css/footer.css">
+    <link rel="stylesheet" href="../../static/css/card.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
@@ -25,19 +26,12 @@
         </nav>
         <div class="main-conntent">
             <h1 class="title">Избранное</h1>
-            <div class="products">
-                {{> includes/card.html}}
-                {{> includes/card.html}}
-                {{> includes/card.html}}
-                {{> includes/card.html}}
-                {{> includes/card.html}}
-                {{> includes/card.html}}
-                {{> includes/card.html}}
-                {{> includes/card.html}}
-                {{> includes/card.html}}
+            <div class="products" id="favoritesContainer">
             </div>
         </div>
     </main>
     {{> includes/footer.html}}
 </body>
+<script src="../static/js/favorite.js"></script>
+<script src="../static/js/global.js"></script>
 </html>

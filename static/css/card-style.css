@@ -14,96 +14,7 @@ body {
 
 html, body {
     overflow: visible;
-}
-
-.header-style {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 48px 200px;
-}
-
-.header-style h1 {
-    font-size: 24px;
-    font-weight: 600;
-    margin: 0;
-}
-
-.header-navigation-text-style {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    align-items: center;
-}
-
-.header-navigation-text-style li {
-    margin: 0 15px;
-}
-
-.header-navigation-text-style li a {
-    text-decoration: none;
-    color: #939393;
-    font-size: 19px;
-    font-weight: 500;
-    transition: all 0.3s ease-in-out;
-    position: relative;
-}
-
-.header-navigation-text-style li a {
-    position: relative;
-    text-decoration: none;
-    color: #939393;
-    transition: color 0.3s ease;
-}
-
-.header-navigation-text-style li a::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    bottom: -5px;
-    width: 0%;
-    height: 2px;
-    background-color: #735CFF;
-    transition: all 0.3s ease-in-out;
-    transform: translateX(-50%);
-}
-
-.header-navigation-text-style li a:hover {
-    color: #000000;
-}
-
-.header-navigation-text-style li a:hover::after {
-    width: 100%;
-}
-
-.header-navigation-text-style li a.active {
-    color: #000000; 
-}
-
-.header-navigation-text-style li a.active::after {
-    width: 100%; 
-}
-
-.entrance-style-btn{
-    width: 87px;
-    height: 40px;
-    border-radius: 9px;
-    font-size: 18px;
-    font-weight: 500;
-    background-color: #ffffff;
-    border: solid; /* none */
-    border-width: 1px;
-    color: #939393;
-}
-
-.entrance-style-btn:hover{
-    transition: all 0.5s ease-in-out;
-    background-color: #735CFF;
-    color: #ffffff;
-    border: none;
-}
+} 
 
 .main-style{
     margin: 0 200px 0 200px;
@@ -296,59 +207,6 @@ html, body {
     align-items: center;
 }
 
-.footer-style{
-    margin-top: 150px;
-    background-color: #141414;
-}
-
-.footer-main{
-    margin: 0 200px;
-    display: flex;
-    font-family: "Montserrat", sans-serif;
-    font-size: 18px;
-    color: #FFFFFF;
-    padding: 0 0;
-    justify-content: space-between;
-}
-
-.footer-main ul{
-    margin: 117px 0px;
-    padding: 0px 87px;
-}
-
-.footer-main li{
-    list-style: none;
-}
-
-.footer-main li a{
-    color: #FFFFFF;
-    text-decoration: none;
-    line-height: 3.5;
-    transition: all 0.3s ease-in-out;
-}
-
-.footer-main li a:hover{
-    color: #735CFF;
-}
-
-.footer-main li a img{
-    transition: all 0.3s ease-in-out;
-}
-
-.footer-main li a img:hover{
-    scale: 110%;
-}
-
-.another-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 28px 200px;
-    color: #fff;
-    font-family: "Montserrat", sans-serif;
-    font-size: 14px;
-}
-
 .rounded{
     width: 20px;
     height: 20px;
@@ -357,4 +215,36 @@ html, body {
 .toast-body{
     font-family: "Montserrat";
     font-size: 16px;
+}
+
+.add-review {    
+    font-family: "Montserrat";
+    font-size: 18px;
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-review button{
+    width: 228px;
+    height: 50px;
+    background-color: rgb(115, 92, 255);
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+    border-width: initial;
+    border-style: none;
+    border-color: initial;
+    border-image: initial;
+    border-radius: 8px;
+    transition: 0.4s ease-in-out;
+}
+
+.add-review button:hover{
+    scale: 101%;
+    background-color: #ffffff;
+    border: solid;
+    border-width: 1px;
+    border-color: #735CFF;
+    color: #735CFF;
 }

@@ -173,4 +173,64 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
         return crow::response(result);
     });
 
+    CROW_ROUTE(app, "/api/favorites/add/<int>").methods("POST"_method)
+    ([&db](const crow::request& req, int productId) {
+        std::string session_id = extractSessionId(req.get_header_value("Cookie"));
+        
+        if (session_id.empty() || !db.checkSession(session_id)) {
+            return crow::response(401, crow::json::wvalue{{"error", "Unauthorized"}});
+        }
+
+        if (db.addToFavorites(session_id, productId)) {
+            return crow::response(200, crow::json::wvalue{{"message", "Added to favorites"}});
+        } else {
+            return crow::response(500, crow::json::wvalue{{"error", "Failed to add to favorites"}});
+        }
+    });
+
+    CROW_ROUTE(app, "/api/favorites").methods("GET"_method)
+    ([&db](const crow::request& req) {
+        std::string session_id = extractSessionId(req.get_header_value("Cookie"));
+    
+        if (session_id.empty()) {
+            return crow::response(401, "Unauthorized");
+        }
+    
+        std::vector<Product> favoriteProducts = db.getFavoritesBySessionId(session_id);
+    
+        if (favoriteProducts.empty()) {
+            return crow::response(200, "[]");
+        }
+    
+        crow::json::wvalue response = crow::json::wvalue::list(favoriteProducts.size()); 
+        for (size_t i = 0; i < favoriteProducts.size(); ++i) {
+            const auto& product = favoriteProducts[i];
+            
+            response[i] = crow::json::wvalue{
+                {"id", product.id},
+                {"name", product.name},
+                {"brand", product.brand},
+                {"image_url", product.image_url},
+                {"price", product.price}
+            };
+        }
+    
+        return crow::response{response};
+    });
+ 
+    CROW_ROUTE(app, "/api/favorites/remove/<int>").methods("POST"_method)
+    ([&db](const crow::request& req, int productId) {
+        std::string session_id = extractSessionId(req.get_header_value("Cookie"));
+        
+        if (session_id.empty() || !db.checkSession(session_id)) {
+            return crow::response(401, crow::json::wvalue{{"error", "Unauthorized"}}); 
+        }
+
+        if (db.removeFromFavorites(session_id, productId)) {
+            return crow::response(200, crow::json::wvalue{{"message", "Product removed from favorites"}}); 
+        } else {
+            return crow::response(500, crow::json::wvalue{{"error", "Failed to remove product from favorites"}});
+        }
+    });
+
 }

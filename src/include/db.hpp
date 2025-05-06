@@ -42,8 +42,11 @@ public:
     bool deleteSession(const std::string& session_id);
     bool isEmailAlreadyRegistered(const std::string& email);
     std::vector<Product> getProducts(int limit = 20);
-    Product Database::getProductById(int id);
-    std::vector<crow::json::wvalue> Database::getReviewsByProduct(int productId);
+    Product getProductById(int id);
+    std::vector<crow::json::wvalue> getReviewsByProduct(int productId);
+    bool addToFavorites(const std::string& session_id, int product_id);
+    std::vector<Product> getFavoritesBySessionId(const std::string& session_id);
+    bool removeFromFavorites(const std::string& session_id, int product_id);
 
 private:
     std::string generateSessionId();

@@ -136,6 +136,7 @@ async function loginFormSubmit() {
 
             toggleHeaderElements(true);
             closeModal();
+            window.location.reload();  
         } else {
             const { error } = await response.json();
 
@@ -168,6 +169,8 @@ function logout() {
     fetch('/logout', { method: 'POST' })
         .then(response => response.json())  
         .then(data => {
+            location.reload();
+            location.replace('/');
         })
         .catch(error => {
             console.error("Error during logout:", error);

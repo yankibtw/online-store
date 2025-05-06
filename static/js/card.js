@@ -7,20 +7,20 @@ function showContent(tab) {
 }
 
 const images = ["review-test.jpg", "review-test.jpg", "review-test.jpg", "review-test.jpg", "review-test.jpg"];
-  const imageContainer = document.getElementById("imageContainer");
-  
-  images.slice(0, 3).forEach(src => {
-      let img = document.createElement("img");
-      img.src = "../static/img/card-img/" + src;
-      img.alt = "Product image";
-      imageContainer.appendChild(img);
-  });
-  
-  if (images.length > 3) {
-      let morePhotos = document.createElement("div");
-      morePhotos.classList.add("more-photos");
-      morePhotos.textContent = `+${images.length - 3} фото`;
-      imageContainer.appendChild(morePhotos);
+const imageContainer = document.getElementById("imageContainer");
+
+images.slice(0, 3).forEach(src => {
+    let img = document.createElement("img");
+    img.src = "../static/img/card-img/" + src;
+    img.alt = "Product image";
+    imageContainer.appendChild(img);
+});
+
+if (images.length > 3) {
+    let morePhotos = document.createElement("div");
+    morePhotos.classList.add("more-photos");
+    morePhotos.textContent = `+${images.length - 3} фото`;
+    imageContainer.appendChild(morePhotos);
 }
 
 const toastTrigger = document.getElementById('liveToastBtn')
@@ -34,113 +34,112 @@ if (toastTrigger) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  const params = new URLSearchParams(window.location.search);
-  const productId = params.get("id");
-
-  if (!productId) return;
-
-  fetch(`/api/product/${productId}`)
-      .then(response => {
-          if (!response.ok) throw new Error("Product not found");
-          return response.json();
-      })
-      .then(product => {
-        document.getElementById("product-name-br").textContent = product.name;
-          document.getElementById("product-name").textContent = product.name;
-          document.getElementById("product-brand").textContent = product.brand;
-          document.getElementById("product-image").src = product.image_url;
-          document.getElementById("product-price").textContent = product.price + " ₽";
-          document.getElementById("product-description").textContent = product.description;
-      })
-      .catch(err => {
-          console.error(err);
-          document.body.innerHTML = "<h2>Товар не найден</h2>";
-      });
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-  const params = new URLSearchParams(window.location.search);
-  const productId = params.get("id");
-
-  function fetchReviews(productId) {
-      fetch(`/api/reviews/${productId}`) 
-          .then(response => response.json())
-          .then(data => {
-              displayReviews(data.reviews);
-          })
-          .catch(error => {
-              console.error('Ошибка:', error);
-          });
-  }
-
-  function displayReviews(reviews) {
+    const productId = new URLSearchParams(window.location.search).get("id");
+    if (!productId) return;
+  
     const reviewsContainer = document.getElementById("reviews");
-    reviewsContainer.innerHTML = '';
+  
+    fetch(`/api/product/${productId}`)
+        .then(response => {
+            if (!response.ok) throw new Error("Товар не найден");
+            return response.json();
+        })
+        .then(product => {
+            renderProduct(product);
 
-    if (reviews.length === 0) {
-        reviewsContainer.innerHTML = '<p>Отзывов пока нет.</p>';
-        return;
+            return fetch(`/api/reviews/${productId}`);
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Ошибка загрузки отзывов");
+            return res.json();
+        })
+        .then(data => {
+            renderReviews(data.reviews);
+        })
+        .catch(err => {
+            console.error(err);
+            document.getElementById("reviews").innerHTML = `<div class="add-review">
+                  <p>У данного товара нет отзывов. Станьте первым, кто оставил отзыв об этом товаре!</p>
+                  <button>Написать отзыв</button>
+                </div>`;
+        });
+  
+    function showMessage(msg) {
+        reviewsContainer.innerHTML = `<p>${msg}</p>`;
     }
+  
+    function renderReviews(reviews = []) {
+      if (!Array.isArray(reviews) || reviews.length === 0) {
+        
+        return `<div class="add-review">
+                  <p>У данного товара нет отзывов. Станьте первым, кто оставил отзыв об этом товаре!</p>
+                  <button>Написать отзыв</button>
+                </div>`;
+      }
+  
+      reviewsContainer.innerHTML = reviews.map(renderReview).join('');
+    }
+  
+    function renderReview({ userName, reviewText, selectedSize, rating, reviewDate, images = [] }) {
+      const avatar = images[0] || "../static/img/card-img/review.png";
+      const stars = "★".repeat(rating);
+  
+      const imageBlock = images.length
+        ? `<div class="images">
+              ${images.map(url => `<img src="${url}" alt="Изображение отзыва">`).join('')}
+           </div>`
+        : '';
+  
+      return `
+        <div class="review">
+          <div class="user">
+            <img src="${avatar}" alt="User">
+            <div class="user-info">
+              <strong>${userName}</strong>
+              <div class="review-mark">
+                <p>Размер: ${selectedSize || "Не указан"}</p>
+                <div style="display: flex; gap: 30px">
+                  <div class="stars">${stars}</div>
+                  <p>${reviewDate}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p>${reviewText}</p>
+          ${imageBlock}
+        </div>
+      `;
+    }
+  
+    function renderProduct(product) {
+      document.getElementById("product-name-br").textContent = product.name;
+      document.getElementById("product-name").textContent = product.name;
+      document.getElementById("product-brand").textContent = product.brand;
+      document.getElementById("product-image").src = product.image_url;
+      document.getElementById("product-price").textContent = product.price + " ₽";
+      document.getElementById("product-description").textContent = product.description;
+    }
+    document.querySelectorAll(".add-to-favourite").forEach(button => {
+        button.addEventListener("click", async function () {
 
-    reviews.forEach(review => {
-        const reviewElement = document.createElement('div');
-        reviewElement.classList.add('review');
+            try {
+                const response = await fetch(`/api/favorites/add/${productId}`, {
+                    method: "POST",
+                    credentials: "include",
+                });
 
-        const userElement = document.createElement('div');
-        userElement.classList.add('user');
+                const result = await response.json();
 
-        const userImage = document.createElement('img');
-        userImage.src = review.images[1];
-        userImage.alt = "User";
-        userElement.appendChild(userImage);
-
-        const userInfoElement = document.createElement('div');
-        userInfoElement.classList.add('user-info');
-
-        const userName = document.createElement('strong');
-        userName.textContent = review.userName;
-        userInfoElement.appendChild(userName);
-
-        const reviewMark = document.createElement('div');
-        reviewMark.classList.add('review-mark');
-
-        const selectedSize = document.createElement('p');
-        selectedSize.textContent = `Размер: ${review.selectedSize || "Не указан"}`;
-        reviewMark.appendChild(selectedSize);
-
-        const stars = document.createElement('div');
-        stars.classList.add('stars');
-        stars.textContent = "★★★★★".slice(0, review.rating); 
-        reviewMark.appendChild(stars);
-
-        const reviewDate = document.createElement('p');
-        reviewDate.textContent = review.reviewDate;
-        reviewMark.appendChild(reviewDate);
-
-        userInfoElement.appendChild(reviewMark);
-        userElement.appendChild(userInfoElement);
-
-        reviewElement.appendChild(userElement);
-
-        const reviewTextElement = document.createElement('p');
-        reviewTextElement.textContent = review.reviewText;
-        reviewElement.appendChild(reviewTextElement);
-
-        if (review.images && review.images.length > 0) {
-            const imagesContainer = document.createElement('div');
-            imagesContainer.classList.add('review-images');
-            review.images.forEach(imageUrl => {
-                const imgElement = document.createElement('img');
-                imgElement.src = imageUrl;
-                imgElement.alt = 'Изображение отзыва';
-                imagesContainer.appendChild(imgElement);
-            });
-            reviewElement.appendChild(imagesContainer);
-        }
-
-        reviewsContainer.appendChild(reviewElement);
+                if (response.ok) {
+                    alert("Товар добавлен в избранное!");
+                } else {
+                    alert("Войдите в аккаунт, чтобы добавить товар в избранное!");
+                }
+            } catch (err) {
+                alert("Ошибка сети");
+                console.error(err);
+            }
+        });
     });
-}
-
-  fetchReviews(productId);
 });
+  
