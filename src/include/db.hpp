@@ -13,6 +13,7 @@ struct Product {
     std::string image_url;
     double price;
     std::string description;
+    int quantity;
 
     crow::json::wvalue toJson() const {
         crow::json::wvalue json;
@@ -22,6 +23,7 @@ struct Product {
         json["image_url"] = image_url;
         json["price"] = price;
         json["description"] = description;
+        json["quantity"] =  quantity;
         return json;
     }
 };
@@ -47,6 +49,9 @@ public:
     bool addToFavorites(const std::string& session_id, int product_id);
     std::vector<Product> getFavoritesBySessionId(const std::string& session_id);
     bool removeFromFavorites(const std::string& session_id, int product_id);
+    void addProductToCart(const std::string& session_id, int product_id);
+    std::vector<Product> getCartBySessionId(const std::string& session_id);
+    bool Database::removeFromCart(const std::string& session_id, int product_id);
 
 private:
     std::string generateSessionId();

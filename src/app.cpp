@@ -233,4 +233,73 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
         }
     });
 
+    CROW_ROUTE(app, "/api/cart/add/<int>").methods("POST"_method)
+    ([&db](const crow::request& req, int productId) {
+        std::string session_id = extractSessionId(req.get_header_value("Cookie"));
+        
+        if (session_id.empty() || !db.checkSession(session_id)) {
+            return crow::response(401, crow::json::wvalue{{"error", "Unauthorized"}});
+        }
+    
+        try {
+            db.addProductToCart(session_id, productId);
+            return crow::response(200, crow::json::wvalue{{"message", "Added to cart"}});
+        } catch (const std::exception& e) {
+            std::string error_msg = e.what();
+            if (error_msg.find("в корзине") != std::string::npos) {
+                return crow::response(409, crow::json::wvalue{{"error", "Already in cart"}});
+            }
+            return crow::response(500, crow::json::wvalue{{"error", error_msg}});
+        }
+    });
+
+    CROW_ROUTE(app, "/api/cart").methods("GET"_method)
+    ([&db](const crow::request& req) {
+        std::string session_id = extractSessionId(req.get_header_value("Cookie"));
+    
+        if (session_id.empty()) {
+            return crow::response(401, "Unauthorized");
+        }
+    
+        std::vector<Product> cartProducts = db.getCartBySessionId(session_id);
+    
+        if (cartProducts.empty()) {
+            return crow::response(200, "[]");
+        }
+    
+        crow::json::wvalue response = crow::json::wvalue::list(cartProducts.size());
+        for (size_t i = 0; i < cartProducts.size(); ++i) {
+            const auto& product = cartProducts[i];
+    
+            response[i] = crow::json::wvalue{
+                {"id", product.id},
+                {"name", product.name},
+                {"brand", product.brand},
+                {"image_url", product.image_url},
+                {"price", product.price},
+                {"quantity", product.quantity}
+            };
+        }
+    
+        return crow::response{response};
+    });
+
+    CROW_ROUTE(app, "/api/cart/remove/<int>")
+    .methods("POST"_method)
+    ([&db](const crow::request& req, int item_id) {
+        std::string session_id = extractSessionId(req.get_header_value("Cookie"));
+        
+        if (session_id.empty()) {
+            return crow::response(401, "Unauthorized");
+        }
+
+        if (db.removeFromCart(session_id, item_id)) {
+            return crow::response(200);  
+        } else {
+            return crow::response(500, "Failed to remove from cart"); 
+        }
+    });
+    
+
 }
+

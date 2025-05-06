@@ -119,6 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("product-price").textContent = product.price + " ₽";
       document.getElementById("product-description").textContent = product.description;
     }
+
     document.querySelectorAll(".add-to-favourite").forEach(button => {
         button.addEventListener("click", async function () {
 
@@ -141,5 +142,34 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
+    
+    const addToCartBtn = document.getElementById("add-to-cart-btn");
+
+    if (addToCartBtn) {
+        addToCartBtn.addEventListener("click", async function () {
+            const productId = new URLSearchParams(window.location.search).get("id");
+
+            try {
+                const response = await fetch(`/api/cart/add/${productId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include", 
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(result.message || "Товар успешно добавлен в корзину!");
+                } else {
+                    alert(result.error || "Не удалось добавить товар в корзину.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Ошибка при добавлении в корзину.");
+            }
+        });
+    }
 });
   
