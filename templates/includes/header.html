@@ -49,48 +49,5 @@
             </div>
         </li>
     </ul>
-
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal">
-            <span class="close-btn" onclick="closeModal()">×</span>
-            <h2 id="modalTitle">Создать аккаунт</h2>
-            <p id="modalToggleText">или <a href="#" id="toggleToLogin">войти в существующий</a></p>
-    
-            <div id="registerForm">
-                <input type="text" id="firstName" placeholder="Имя*" required>
-                <div class="error" id="firstNameError">Введите корректное имя (только буквы, минимум 2 символа)</div>
-    
-                <input type="text" id="lastName" placeholder="Фамилия*" required>
-                <div class="error" id="lastNameError">Введите корректную фамилию (только буквы, минимум 2 символа)</div>
-    
-                <input type="email" id="email" placeholder="E-mail">
-                <div class="error" id="emailError">Введите корректный e-mail</div>
-    
-                <input type="tel" id="phone" placeholder="Телефон">
-                <div class="error" id="phoneError">Введите корректный российский номер (+7 или 8 и 10 цифр)</div>
-    
-                <div class="password-container">
-                    <input type="password" id="password" placeholder="Пароль">
-                    <span class="toggle-password" onclick="togglePassword(event)">👁</span>
-                </div>
-                <div class="error" id="passwordError">Пароль должен быть минимум 6 символов</div>
-    
-                <button onclick="validateForm()">Создать аккаунт</button>
-            </div>
-    
-            <div id="loginForm" style="display: none;">
-                <input type="email" id="loginEmail" placeholder="E-mail">
-                <div class="error" id="loginEmailError">Неверный E-mail</div>
-    
-                <div class="password-container">
-                    <input type="password" id="loginPassword" placeholder="Пароль">
-                    <span class="toggle-password" onclick="togglePassword(event)">👁</span>
-                </div>
-                <div class="error" id="loginPasswordError">Пароль должен быть минимум 6 символов</div>
-
-                <button onclick="loginFormSubmit()">Войти в аккаунт</button>
-            </div>
-        </div>
-    </div>
 </header>
-<script src="../../static/js/header.js"></script>
+<script src="/static/js/header.js"></script>

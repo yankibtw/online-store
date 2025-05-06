@@ -136,7 +136,6 @@ async function loginFormSubmit() {
 
             toggleHeaderElements(true);
             closeModal();
-            window.location.reload();  
         } else {
             const { error } = await response.json();
 

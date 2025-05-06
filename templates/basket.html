@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/basket-style.css">
-    <link rel="stylesheet" href="/static/css/header.css">
     <link rel="stylesheet" href="/static/css/footer.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,6 +15,7 @@
 </head>
 <body>
     {{> includes/header.html}}
+    {{> includes/modal.html}}
     <main class="main-style">
         <nav aria-label="breadcrumb" style="margin-bottom: 45px;">
             <ol class="breadcrumb">
@@ -71,8 +71,7 @@
         </div>
     </main>
     {{> includes/footer.html}}
-    <script src="../static/js/basket.js"></script>
-    <script src="../static/js/header.js"></script>
-    <script src="../static/js/global.js"></script>
+    <script src="/static/js/basket.js"></script>
+    <script src="/static/js/global.js"></script>
 </body>
 </html>

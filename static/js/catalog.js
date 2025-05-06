@@ -1,25 +1,6 @@
 let currentPage = 1;
 const productsPerPage = 6;
 
-document.querySelectorAll('.header-navigation-text-style li a').forEach(link => {
-    link.addEventListener('click', function() {
-        document.querySelectorAll('.header-navigation-text-style li a').forEach(el => {
-            el.classList.remove('active');
-        });
-        
-        this.classList.add('active');
-        });
-    });
-    
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener("click", function(e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute("href")).scrollIntoView({
-            behavior: "smooth"
-        });
-    });
-});
-
 function setupSearch() {
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', function () {
