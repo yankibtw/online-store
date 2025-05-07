@@ -12,8 +12,9 @@ struct Product {
     std::string brand;
     std::string image_url;
     double price;
+    double discount_price;
     std::string description;
-    int quantity;
+    std::string sku;
 
     crow::json::wvalue toJson() const {
         crow::json::wvalue json;
@@ -22,8 +23,9 @@ struct Product {
         json["brand"] = brand;
         json["image_url"] = image_url;
         json["price"] = price;
+        json["discount_price"] = discount_price;
         json["description"] = description;
-        json["quantity"] =  quantity;
+        json["sku"] = sku;
         return json;
     }
 };
@@ -36,6 +38,8 @@ struct CartProduct {
     std::optional<double> discount_price;
     std::string image_url;
     int quantity;
+    std::string size;
+    std::string sku;
 };
 
 class Database {
@@ -59,7 +63,7 @@ public:
     bool addToFavorites(const std::string& session_id, int product_id);
     std::vector<Product> getFavoritesBySessionId(const std::string& session_id);
     bool removeFromFavorites(const std::string& session_id, int product_id);
-    void addProductToCart(const std::string& session_id, int product_id);
+    void addProductToCart(const std::string& session_id, int product_id, const std::string& size);
     std::vector<CartProduct> getCartBySessionId(const std::string& session_id);
     bool removeFromCart(const std::string& session_id, int product_id);
     void updateCartItemQuantity(int cart_item_id, int quantity);

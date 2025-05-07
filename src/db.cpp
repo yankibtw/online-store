@@ -183,10 +183,12 @@ Product Database::getProductById(int id) {
         pqxx::result r = W.exec_params(
             "SELECT p.id, p.name, COALESCE(b.name, 'Без бренда') AS brand, "
             "COALESCE(pi.image_url, '/static/img/default.png') AS image_url, "
-            "p.price, COALESCE(p.description, '') AS description "
+            "p.price, COALESCE(p.description, '') AS description, p.discount_price, "
+            "pv.sku "
             "FROM products p "
             "LEFT JOIN brands b ON p.brand_id = b.id "
             "LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_main = true "
+            "LEFT JOIN product_variants pv ON p.id = pv.product_id "
             "WHERE p.id = $1", id
         );
 
@@ -197,7 +199,9 @@ Product Database::getProductById(int id) {
             p.brand = row["brand"].as<std::string>();
             p.image_url = row["image_url"].as<std::string>();
             p.price = row["price"].as<double>();
+            p.discount_price = row["discount_price"].as<double>();
             p.description = row["description"].as<std::string>();
+            p.sku = row["sku"].as<std::string>();
         }
     } catch (const std::exception& e) {
         std::cerr << "Error fetching product by ID: " << e.what() << std::endl;
@@ -351,7 +355,7 @@ bool Database::removeFromFavorites(const std::string& session_id, int product_id
     }
 }
 
-void Database::addProductToCart(const std::string& session_id, int product_id) {
+void Database::addProductToCart(const std::string& session_id, int product_id, const std::string& size) {
     try {
         pqxx::work txn(*conn_);
 
@@ -365,38 +369,22 @@ void Database::addProductToCart(const std::string& session_id, int product_id) {
 
         std::string user_id = user_res[0]["user_id"].as<std::string>();
 
-        pqxx::result product_res = txn.exec_params(
-            "SELECT name, price, discount_price FROM products WHERE id = $1", product_id
-        );
-
-        if (product_res.empty()) {
-            throw std::runtime_error("Товар не найден");
-        }
-
-        pqxx::result image_res = txn.exec_params(
-            "SELECT image_url FROM product_images WHERE product_id = $1 AND is_main = TRUE", product_id
-        );
-
-        std::string product_image_url = "/static/img/default-image.png";
-        if (!image_res.empty()) {
-            product_image_url = image_res[0]["image_url"].as<std::string>();
-        }
-
         pqxx::result exists_res = txn.exec_params(
-            "SELECT id FROM cart_items WHERE user_id = $1 AND product_id = $2",
-            user_id, product_id
+            "SELECT id FROM cart_items WHERE user_id = $1 AND product_id = $2 AND size = $3",
+            user_id, product_id, size
         );
 
         if (!exists_res.empty()) {
             txn.exec_params(
-                "UPDATE cart_items SET quantity = quantity + 1, updated_at = CURRENT_TIMESTAMP WHERE user_id = $1 AND product_id = $2",
-                user_id, product_id
+                "UPDATE cart_items SET quantity = quantity + 1, updated_at = CURRENT_TIMESTAMP "
+                "WHERE user_id = $1 AND product_id = $2 AND size = $3",
+                user_id, product_id, size
             );
         } else {
             txn.exec_params(
-                "INSERT INTO cart_items (user_id, product_id, quantity, created_at, updated_at) "
-                "VALUES ($1, $2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",
-                user_id, product_id
+                "INSERT INTO cart_items (user_id, product_id, size, quantity, created_at, updated_at) "
+                "VALUES ($1, $2, $3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",
+                user_id, product_id, size
             );
         }
 
@@ -430,12 +418,15 @@ std::vector<CartProduct> Database::getCartBySessionId(const std::string& session
             p.price,
             p.discount_price,
             COALESCE(pi.image_url, '/static/img/default.png') AS image_url,
-            ci.quantity 
+            ci.quantity,
+            ci.size,
+            pv.sku
         FROM cart_items ci
         JOIN products p ON ci.product_id = p.id
         LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_main = true
+        LEFT JOIN product_variants pv ON p.id = pv.product_id
         WHERE ci.user_id = $1
-    )", user_id);
+    )", user_id);    
 
     std::vector<CartProduct> items;
 
@@ -452,8 +443,10 @@ std::vector<CartProduct> Database::getCartBySessionId(const std::string& session
             item.discount_price = row["discount_price"].as<double>();
         }
 
+        item.size = row["size"].as<std::string>();
         item.image_url = row["image_url"].as<std::string>();
         item.quantity = row["quantity"].as<int>(); 
+        item.sku = row["sku"].as<std::string>(); 
 
         items.push_back(item);
     }

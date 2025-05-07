@@ -236,22 +236,25 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
     CROW_ROUTE(app, "/api/cart/add/<int>").methods("POST"_method)
     ([&db](const crow::request& req, int productId) {
         std::string session_id = extractSessionId(req.get_header_value("Cookie"));
-        
+    
         if (session_id.empty() || !db.checkSession(session_id)) {
             return crow::response(401, crow::json::wvalue{{"error", "Unauthorized"}});
         }
     
         try {
-            db.addProductToCart(session_id, productId);
+            auto body = crow::json::load(req.body);
+            if (!body || !body.has("size")) {
+                return crow::response(400, crow::json::wvalue{{"error", "Size is required"}});
+            }
+    
+            std::string size = body["size"].s();
+    
+            db.addProductToCart(session_id, productId, size);
             return crow::response(200, crow::json::wvalue{{"message", "Added to cart"}});
         } catch (const std::exception& e) {
-            std::string error_msg = e.what();
-            if (error_msg.find("в корзине") != std::string::npos) {
-                return crow::response(409, crow::json::wvalue{{"error", "Already in cart"}});
-            }
-            return crow::response(500, crow::json::wvalue{{"error", error_msg}});
+            return crow::response(500, crow::json::wvalue{{"error", e.what()}});
         }
-    });
+    });    
     
     CROW_ROUTE(app, "/api/cart").methods("GET"_method)
     ([&db](const crow::request& req) {
@@ -285,7 +288,9 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
                 {"price", product.price},
                 {"discount_price", product.discount_price.has_value() ? crow::json::wvalue(*product.discount_price) : crow::json::wvalue(nullptr)},
                 {"image_url", product.image_url},
-                {"quantity", product.quantity} 
+                {"quantity", product.quantity},
+                {"size", product.size},
+                {"sku", product.sku}
             };
         }
     

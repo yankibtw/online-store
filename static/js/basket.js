@@ -150,6 +150,8 @@ function renderCart(cart) {
                     <div class="product-information">
                         <h1 style="max-width: 600px;">${item.name}</h1>
                         <h5>Размер: ${item.size || 'N/A'}</h5>
+                        <h5>Скидка: ${item.discount_price + "₽" || 'N/A'}</h5>
+                        <h5>Артикул: ${item.sku || 'N/A'}</h5>
                     </div>
                 </div>
                 <div class="product-another-content">
@@ -169,7 +171,7 @@ function renderCart(cart) {
                             </a>
                         </div>
                     </div>
-                    <h1 class="product-cost" data-price="${price}">${(price).toLocaleString('ru-RU')}₽</h1>
+                    <h1 class="product-cost" data-price="${price}">${(price * quantity).toLocaleString('ru-RU')}₽</h1>
                 </div>
             </div>
         `;

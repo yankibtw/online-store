@@ -115,8 +115,10 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("product-name-br").textContent = product.name;
       document.getElementById("product-name").textContent = product.name;
       document.getElementById("product-brand").textContent = product.brand;
+      document.getElementById("sku-txt").textContent = product.sku;
       document.getElementById("product-image").src = product.image_url;
-      document.getElementById("product-price").textContent = product.price + " ₽";
+      document.getElementById("product-price").textContent = (product.price - product.discount_price) + " ₽";
+      document.getElementById("product-disc-price").textContent = product.price + " ₽";
       document.getElementById("product-description").textContent = product.description;
     }
 
@@ -148,18 +150,25 @@ document.addEventListener("DOMContentLoaded", function () {
     if (addToCartBtn) {
         addToCartBtn.addEventListener("click", async function () {
             const productId = new URLSearchParams(window.location.search).get("id");
-
+            const selectedSize = document.querySelector('input[name="size_option"]:checked');
+    
+            if (!selectedSize) {
+                alert("Пожалуйста, выберите размер перед добавлением в корзину.");
+                return;
+            }
+    
             try {
                 const response = await fetch(`/api/cart/add/${productId}`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    credentials: "include", 
+                    credentials: "include",
+                    body: JSON.stringify({ size: selectedSize.value })
                 });
-
+    
                 const result = await response.json();
-
+    
                 if (response.ok) {
                     alert(result.message || "Товар успешно добавлен в корзину!");
                 } else {
@@ -171,5 +180,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+    
 });
   

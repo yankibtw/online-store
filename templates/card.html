@@ -55,35 +55,32 @@
                 <h1 id="product-name"></h1>
                 <h4 style="margin-top: 45px;" id="product-brand">Цена</h4>
                 <h2 style="font-weight: 900;" id="product-price">123 456₽</h2>
+                <s><h5 style="font-weight: 900;" id="product-disc-price"></h5></s>
                 <hr style="margin: 40px 0">
                 <h4>Выберите размер</h4>
-                <div class="size-group" role="group" aria-label="Basic radio toggle button group">
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-                    <label class="btn" for="btnradio1">38</label>
-                  
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-                    <label class="btn" for="btnradio2">40</label>
-                  
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-                    <label class="btn" for="btnradio3">42</label>
-
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
-                    <label class="btn" for="btnradio4">44</label>
-
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
-                    <label class="btn" for="btnradio5">46</label>
-
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio6" autocomplete="off">
-                    <label class="btn" for="btnradio6">48</label>
-                </div>
+                <div class="size-group" role="group" aria-label="Выбор размера">
+                  <input type="radio" class="btn-check" name="size_option" id="btnradio1" value="XS" autocomplete="off" checked>
+                  <label class="btn" for="btnradio1">XS</label>
+                
+                  <input type="radio" class="btn-check" name="size_option" id="btnradio2" value="S" autocomplete="off">
+                  <label class="btn" for="btnradio2">S</label>
+                
+                  <input type="radio" class="btn-check" name="size_option" id="btnradio3" value="M" autocomplete="off">
+                  <label class="btn" for="btnradio3">M</label>
+              
+                  <input type="radio" class="btn-check" name="size_option" id="btnradio4" value="L" autocomplete="off">
+                  <label class="btn" for="btnradio4">L</label>
+              
+                  <input type="radio" class="btn-check" name="size_option" id="btnradio5" value="XL" autocomplete="off">
+                  <label class="btn" for="btnradio5">XL</label>
+              
+                  <input type="radio" class="btn-check" name="size_option" id="btnradio6" value="XXL" autocomplete="off">
+                  <label class="btn" for="btnradio6">XXL</label>
+                </div>              
                 <hr style="margin: 40px 0"> 
                 <div class="another-content">
-                    <h4>Состав</h4>
-                    <h6>Хлопок 93%, лайкра 7%</h6>
-                </div>
-                <div class="another-content">
                    <h4>Артикул</h4>
-                        <h6>23423423423</h6>
+                        <h6 id="sku-txt"></h6>
                 </div>
             </div>
         </div>

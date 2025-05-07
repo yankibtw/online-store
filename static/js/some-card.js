@@ -1,4 +1,4 @@
-let allProducts = [];
+let allProducts = [6];
 
 function loadProducts() {
     fetch('/api/products')
