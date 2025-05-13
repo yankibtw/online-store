@@ -75,12 +75,12 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: 0.3s;
+    transition: all 0.3s ease-in-out;
 }
 
 .left-info-panel-buttons button img {
     padding-right: 13px;
-    transition: 0.3s;
+    transition: all 0.3s ease-in-out;
 }
 
 .left-info-panel-buttons button:first-child:hover {

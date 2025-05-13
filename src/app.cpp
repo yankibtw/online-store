@@ -37,8 +37,20 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
         return crow::mustache::load("basket.html").render();
     });
 
+    CROW_ROUTE(app, "/order")([]() {
+        return crow::mustache::load("order.html").render();
+    });
+
     CROW_ROUTE(app, "/favourite")([]() {
         return crow::mustache::load("favourite.html").render();
+    });
+
+    CROW_ROUTE(app, "/politika")([]() {
+        return crow::mustache::load("politika.html").render();
+    });
+
+    CROW_ROUTE(app, "/swap")([]() {
+        return crow::mustache::load("swap.html").render();
     });
 
     CROW_ROUTE(app, "/register").methods("POST"_method)

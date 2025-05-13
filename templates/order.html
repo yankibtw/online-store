@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/order-style.css">
+    <link rel="stylesheet" href="/static/css/header.css">
+    <link rel="stylesheet" href="/static/css/footer.css">
+    <link rel="stylesheet" href="/static/css/card.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <title>Fear</title>
+</head>
+<body>
+    {{> includes/header.html}}
+    {{> includes/modal.html}}    
+    <main class="main-style">
+        <nav aria-label="breadcrumb" style="margin-bottom: 45px;">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/">Главная</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Оформление заказа</li>
+            </ol>
+        </nav>
+        <h1 class="title">Оплата товара<h1>
+        <div class="basket-products" id="cartContainer">
+            <div class="product">
+                <div style="display: flex; gap: 40px">
+                    <img src="../img/card-img/main-photo.png" alt="">
+                    <div class="product-information">
+                        <h1 style="max-width: 600px;">Nike Air ForceNike Air ForceNike Air Force ForceNike Air Force</h1>
+                        <h5>Product size</h5>
+                    </div>
+                </div>
+                <div class="product-another-content">
+                    <div class="product-actions">
+                        <div class="product-inc">
+                            <a href="#" onclick="increment(event); return false;"><img src="../img/basket-img/inc.png" alt=""></a>
+                            <h4 class="count">1</h4>
+                            <a href="#" onclick="decrement(event); return false;"><img src="../img/basket-img/dec.png" alt=""></a>
+                        </div>
+                        <div>
+                            <a href="#"><img src="../img/basket-img/Delete.png" alt=""></a>
+                        </div>
+                    </div>
+                    <h1 class="product-cost">123 567₽</h1>
+                </div>
+            </div>
+        </div>
+        <div class="user-info">
+            <h1 class="title" style="font-size: 32px; margin-bottom: 20px;">Контактная информация</h1>
+            <div class="regModal" style="box-shadow: none; padding: 0;">
+                <input type="text" id="userName" placeholder="ФИО*" required>
+                <div class="error" id="userNameError">Введите корректное имя (только буквы, минимум 2 символа)</div>
+
+                <input type="tel" id="userPhone" placeholder="Телефон">
+                <div class="error" id="userPhoneError">Введите корректный российский номер (+7 или 8 и 10 цифр)</div>
+                
+                <input type="email" id="userEmail" placeholder="E-mail">
+                <div class="error" id="userEmailError">Введите корректный e-mail</div>
+
+                <input type="text" id="firstName" placeholder="Адрес" required>
+                <div class="error" id="firstNameError">Введите корректый адрес</div>
+            </div>
+            <hr>
+            <div class="exitInfo">
+                <h1 class="title" style="font-size: 32px; margin-top: 50px; margin-bottom: 34px;">Итог</h1>
+                <h3>Общая стоимость заказа:      <mark>122 244 ₽</mark></h3>
+                <h3>Колличество товаров:      <mark>4</mark></h3>
+                <h3>Адрес:      <mark>Какой-то адрес</mark></h3>
+                <h3>Способ оплаты:      <mark>Картой</mark></h3>
+            </div>
+            <div class="regModal" style="box-shadow: none; padding: 0;">
+                <button onclick="" style="font-family: 'Montserrat'; font-size: 16px;">Оформить заказ</button>
+            </div>
+        </div>
+    </main>
+    {{> includes/footer.html}}
+    <script src="../static/js/catalog.js"></script>
+    <script src="../static/js/global.js"></script>
+</body>
+</html>
