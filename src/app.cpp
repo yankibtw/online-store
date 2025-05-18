@@ -344,4 +344,22 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
             return crow::response(500, std::string("Ошибка при обновлении количества: ") + e.what());
         }
     });
+
+    CROW_ROUTE(app, "/api/checkout").methods("POST"_method)
+    ([](const crow::request& req) {
+        auto body = crow::json::load(req.body);
+        if (!body || !body.has("product_ids")) {
+            return crow::response(400, "Invalid request");
+        }
+
+        auto product_ids = body["product_ids"];
+        std::string payment_url = "/order";
+
+        crow::json::wvalue res;
+        res["success"] = true;
+        res["payment_url"] = payment_url;
+
+        return crow::response{res};
+    });
+
 }

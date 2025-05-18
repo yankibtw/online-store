@@ -63,11 +63,15 @@ function updateCartItemUI(productId, cartItem) {
 }
 
 function updateSummary(cart) {
+    const checkedCheckboxes = document.querySelectorAll('.item-checkbox:checked');
+    const selectedIds = Array.from(checkedCheckboxes).map(cb => parseInt(cb.value));
+    const selectedItems = cart.filter(item => selectedIds.includes(item.cart_item_id));
+
     let totalQuantity = 0;
     let totalFullPrice = 0;
     let totalDiscountedPrice = 0;
 
-    cart.forEach(item => {
+    selectedItems.forEach(item => {
         const quantity = item.quantity;
         const price = item.price;
         const discountPrice = item.discount_price ?? item.price;
@@ -96,9 +100,9 @@ function updateSummary(cart) {
             <hr style="margin: 24px 0">
             <div class="exit-data">
                 <h5>Итог:</h5>
-                <h4 style="color: #414141">${totalSavings.toLocaleString('ru-RU')}₽</h4>
+                <h4 style="color: #414141">${(totalSavings).toLocaleString('ru-RU')}₽</h4>
             </div>
-            <button>Оформить заказ</button>
+            <button id="checkoutBtn">Оформить заказ</button>
         </div>
     `;
 
@@ -109,6 +113,8 @@ function updateSummary(cart) {
         const container = document.getElementById('cartContainer');
         container.insertAdjacentHTML('beforeend', summaryHTML);
     }
+
+    addCheckoutListener();  
 }
 
 function loadCart() {
@@ -143,38 +149,54 @@ function renderCart(cart) {
         const discountPrice = item.discount_price ?? item.price;
         const itemTotal = discountPrice * quantity;
 
-        const card = `
-            <div class="product">
-                <div style="display: flex; gap: 40px">
-                    <img src="${imageUrl}" alt=""/>
-                    <div class="product-information">
-                        <h1 style="max-width: 600px;">${item.name}</h1>
-                        <h5>Размер: ${item.size || 'N/A'}</h5>
-                        <h5>Скидка: ${item.discount_price + "₽" || 'N/A'}</h5>
-                        <h5>Артикул: ${item.sku || 'N/A'}</h5>
-                    </div>
-                </div>
-                <div class="product-another-content">
-                    <div class="product-actions">
-                        <div class="product-inc">
-                            <a href="#" onclick="increment(event, ${item.cart_item_id}); return false;">
-                                <img src="/static/img/basket-img/inc.png" alt=""/>
-                            </a>
-                            <h4 class="count" data-id="${item.cart_item_id}">${item.quantity}</h4>
-                            <a href="#" onclick="decrement(event, ${item.cart_item_id}); return false;">
-                                <img src="/static/img/basket-img/dec.png" alt=""/>
-                            </a>
-                        </div>
-                        <div>
-                            <a href="#" style="display:flex;" onclick="removeFromCart(${item.cart_item_id});">
-                                <img src="/static/img/basket-img/Delete.png" alt=""/>
-                            </a>
-                        </div>
-                    </div>
-                    <h1 class="product-cost" data-price="${price}">${(price * quantity).toLocaleString('ru-RU')}₽</h1>
+const card = `
+    <div style="display: flex; gap: 25px">
+        <div class="form-check" style="display: flex; justify-content: center; align-items: center;
+            margin-bottom: 60px;">
+            <input 
+                class="form-check-input item-checkbox"
+                style="width:27px; height:27px; gap: 10px" 
+                type="checkbox" 
+                value="${item.cart_item_id}" 
+                id="check-${item.cart_item_id}" 
+                checked
+            >
+            <label class="form-check-label" for="check-${item.cart_item_id}"></label>
+        </div>
+        <div class="product">
+            <div style="display: flex; gap: 40px; align-items: center;">
+                <img src="${imageUrl}" alt="" style="" />
+                <div class="product-information">
+                    <h1 style="max-width: 600px;">${item.name}</h1>
+                    <h5>Размер: ${item.size || 'N/A'}</h5>
+                    <h5>Скидка: ${item.discount_price + "₽" || 'N/A'}</h5>
+                    <h5>Артикул: ${item.sku || 'N/A'}</h5>
                 </div>
             </div>
-        `;
+
+            <div class="product-another-content">
+                <div class="product-actions">
+                    <div class="product-inc">
+                        <a href="#" onclick="increment(event, ${item.cart_item_id}); return false;">
+                            <img src="/static/img/basket-img/inc.png" alt=""/>
+                        </a>
+                        <h4 class="count" data-id="${item.cart_item_id}">${item.quantity}</h4>
+                        <a href="#" onclick="decrement(event, ${item.cart_item_id}); return false;">
+                            <img src="/static/img/basket-img/dec.png" alt=""/>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="#" style="display:flex;" onclick="removeFromCart(${item.cart_item_id});">
+                            <img src="/static/img/basket-img/Delete.png" alt=""/>
+                        </a>
+                    </div>
+                </div>
+                <h1 class="product-cost" data-price="${price}">${(price * quantity).toLocaleString('ru-RU')}₽</h1>
+            </div>
+        </div>
+    </div>
+`;
+
 
         container.insertAdjacentHTML('beforeend', card);
     });
@@ -230,4 +252,37 @@ function updateCartQuantity(cartItemId, newQuantity) {
 document.addEventListener('DOMContentLoaded', () => {
     loadCart();
 });
+
+function addCheckoutListener() {
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            const checkedCheckboxes = document.querySelectorAll('.item-checkbox:checked');
+            const selectedIds = Array.from(checkedCheckboxes).map(cb => cb.value);
+
+            if (selectedIds.length === 0) {
+                alert('Пожалуйста, выберите хотя бы один товар для оплаты.');
+                return;
+            }
+
+            fetch('/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ product_ids: selectedIds })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.payment_url) {
+                    window.location.href = data.payment_url;
+                } else {
+                    alert('Ошибка при переходе к оплате.');
+                }
+            })
+            .catch(() => alert('Ошибка соединения с сервером.'));
+        });
+    }
+}
 

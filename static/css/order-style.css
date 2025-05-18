@@ -125,3 +125,50 @@ html, body {
     font-weight: 600;
     text-decoration: none;
 }
+
+.suggestions{
+    display: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 2;
+    text-decoration: none;
+    text-align: start;
+    width: 335px;
+    padding: 17px 12px 17px 12px;
+    border: 1px solid #CFCFCF;
+    border-radius: 15px;
+    font-size: 16px;
+}
+
+.payment-container {
+  margin-top: 20px;
+  font-family: sans-serif;
+}
+
+.payment-options {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.payment-option {
+  padding: 12px 20px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
+  background-color: #f9f9f9;
+  font-size: 16px;
+}
+
+.payment-option:hover {
+  border-color: #22333B;
+}
+
+.payment-option.active {
+  border-color: #22333B;
+  background-color: #e6f0ff;
+  box-shadow: 0 0 5px 22333B;
+}
