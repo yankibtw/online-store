@@ -20,6 +20,13 @@ std::string extractSessionId(const std::string& cookieHeader) {
     return "";
 }
 
+std::string getCurrentTimestamp() {
+    std::time_t now = std::time(nullptr);
+    char buf[20];
+    std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
+    return std::string(buf);
+}
+
 void setupRoutes(crow::SimpleApp& app, Database& db) {
     CROW_ROUTE(app, "/")([]() {
         return crow::mustache::load("main.html").render();
@@ -146,34 +153,42 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
     CROW_ROUTE(app, "/api/products").methods("GET"_method)
     ([&db]() {
         auto products = db.getProducts();
-        crow::json::wvalue result;
-
-        result = crow::json::wvalue::list(products.size());
+        crow::json::wvalue result = crow::json::wvalue::list(products.size());
 
         for (size_t i = 0; i < products.size(); ++i) {
             result[i] = products[i].toJson();
         }
 
-        return crow::response(result);
+        crow::response res(result);
+        res.add_header("Content-Type", "application/json; charset=utf-8");
+
+        return res;
     });
 
     CROW_ROUTE(app, "/api/product/<int>")
     .methods("GET"_method)
     ([&db](int productId) {
         Product product = db.getProductById(productId);
+        crow::response res;
+
         if (product.id != 0) {
-            return crow::response(product.toJson());
+            res = crow::response(product.toJson());
+            res.code = 200;
         } else {
-            return crow::response(404, "Product not found");
+            res = crow::response(404, R"({"error":"Product not found"})");
         }
-    });    
+
+        res.add_header("Content-Type", "application/json; charset=utf-8");
+        return res;
+    });
+   
 
     CROW_ROUTE(app, "/api/reviews/<int>").methods("GET"_method)
     ([&db](int productId) {
         std::vector<crow::json::wvalue> reviews = db.getReviewsByProduct(productId);
 
         if (reviews.empty()) {
-            return crow::response(404, "Отзывы не найдены");
+            return crow::response(404, "Reviews not found");
         }
 
         crow::json::wvalue result;
@@ -184,6 +199,7 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
 
         return crow::response(result);
     });
+
 
     CROW_ROUTE(app, "/api/favorites/add/<int>").methods("POST"_method)
     ([&db](const crow::request& req, int productId) {
@@ -271,28 +287,30 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
     CROW_ROUTE(app, "/api/cart").methods("GET"_method)
     ([&db](const crow::request& req) {
         std::string session_id = extractSessionId(req.get_header_value("Cookie"));
-    
+
         if (session_id.empty()) {
             return crow::response(401, "Unauthorized");
         }
-    
+
         std::vector<CartProduct> cartProducts;
         try {
             cartProducts = db.getCartBySessionId(session_id);
         } catch (const std::exception& e) {
-            return crow::response(500, std::string("Ошибка получения корзины: ") + e.what());
+            crow::json::wvalue err;
+            err["error"] = std::string("Error retrieving cart: ") + e.what();
+            return crow::response(500, err);
         }
-    
+
         if (cartProducts.empty()) {
             crow::json::wvalue emptyResponse;
             emptyResponse["status"] = "empty";
             return crow::response{emptyResponse};
         }
-    
+
         crow::json::wvalue response = crow::json::wvalue::list(cartProducts.size());
         for (size_t i = 0; i < cartProducts.size(); ++i) {
             const auto& product = cartProducts[i];
-    
+
             response[i] = crow::json::wvalue{
                 {"cart_item_id", product.cart_item_id},
                 {"product_id", product.product_id},
@@ -305,9 +323,10 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
                 {"sku", product.sku}
             };
         }
-    
+
         return crow::response{response};
     });
+
     
     CROW_ROUTE(app, "/api/cart/remove/<int>").methods("POST"_method)
     ([&db](const crow::request& req, int item_id) {
@@ -341,25 +360,121 @@ void setupRoutes(crow::SimpleApp& app, Database& db) {
             db.updateCartItemQuantity(cart_item_id, new_quantity);
             return crow::response(200);
         } catch (const std::exception& e) {
-            return crow::response(500, std::string("Ошибка при обновлении количества: ") + e.what());
+            return crow::response(500, std::string("Error when updating the quantity: ") + e.what());
         }
     });
 
-    CROW_ROUTE(app, "/api/checkout").methods("POST"_method)
-    ([](const crow::request& req) {
+    CROW_ROUTE(app, "/api/checkout/products").methods("POST"_method)
+    ([&db](const crow::request& req) {
+        std::string session_id = extractSessionId(req.get_header_value("Cookie"));
+
+        if (session_id.empty()) {
+            return crow::response(401, "Unauthorized");
+        }
+
         auto body = crow::json::load(req.body);
-        if (!body || !body.has("product_ids")) {
-            return crow::response(400, "Invalid request");
+        if (!body || body["product_ids"].t() != crow::json::type::List) {
+            return crow::response(400, "Invalid JSON: product_ids must be a list");
         }
 
-        auto product_ids = body["product_ids"];
-        std::string payment_url = "/order";
 
-        crow::json::wvalue res;
-        res["success"] = true;
-        res["payment_url"] = payment_url;
+        std::vector<int> selected_ids;
+        for (const auto& id : body["product_ids"]) {
+            selected_ids.push_back(id.i());
+        }
 
-        return crow::response{res};
+        std::vector<CartProduct> cartProducts;
+        try {
+            cartProducts = db.getCartBySessionId(session_id);
+        } catch (const std::exception& e) {
+            return crow::response(500, std::string("Error receiving the shopping cart: ") + e.what());
+        }
+
+        std::vector<CartProduct> selectedProducts;
+        for (const auto& product : cartProducts) {
+            if (std::find(selected_ids.begin(), selected_ids.end(), product.cart_item_id) != selected_ids.end()) {
+                selectedProducts.push_back(product);
+            }
+        }
+
+        crow::json::wvalue response = crow::json::wvalue::list(selectedProducts.size());
+        for (size_t i = 0; i < selectedProducts.size(); ++i) {
+            const auto& product = selectedProducts[i];
+            response[i] = crow::json::wvalue{
+                {"cart_item_id", product.cart_item_id},
+                {"product_id", product.product_id},
+                {"name", product.name},
+                {"price", product.price},
+                {"discount_price", product.discount_price.has_value() ? crow::json::wvalue(*product.discount_price) : crow::json::wvalue(nullptr)},
+                {"image_url", product.image_url},
+                {"quantity", product.quantity},
+                {"size", product.size},
+                {"sku", product.sku}
+            };
+        }
+
+        return crow::response{response};
     });
 
+    CROW_ROUTE(app, "/api/reviews/add/<int>").methods("POST"_method)
+    ([&db](const crow::request& req, int productId) {
+        std::string session_id = extractSessionId(req.get_header_value("Cookie"));
+
+        if (session_id.empty() || !db.checkSession(session_id)) {
+            return crow::response(401, crow::json::wvalue{{"error", "Unauthorized"}});
+        }
+
+        auto body = crow::json::load(req.body);
+        if (!body || !body.has("rating") || !body.has("comment")) {
+            return crow::response(400, crow::json::wvalue{{"error", "Missing rating or comment"}});
+        }
+
+        int rating = body["rating"].i();
+        std::string comment = body["comment"].s();
+        
+        std::string selected_size = "";
+        if (body.has("selected_size")) {
+            selected_size = body["selected_size"].s();
+        }
+
+        std::vector<std::string> image_urls;
+        if (body.has("image_urls") && body["image_urls"].t() == crow::json::type::List) {
+            for (auto& img : body["image_urls"]) {
+                image_urls.push_back(img.s());
+            }
+        }
+
+        if (rating < 1 || rating > 5 || comment.empty()) {
+            return crow::response(400, crow::json::wvalue{{"error", "Rating must be 1-5 and comment must not be empty"}});
+        }
+
+        try {
+            std::optional<std::string> usernameOpt = db.getUsernameBySession(session_id);
+
+            if (!usernameOpt) {
+                return crow::response(401, crow::json::wvalue{{"error", "Invalid session"}});
+            }
+
+            std::string username = *usernameOpt;
+            std::string review_date = getCurrentTimestamp();
+
+            bool success = db.addReview(
+                productId,
+                username,
+                review_date,
+                comment,
+                selected_size,
+                rating,
+                image_urls
+            );
+
+            if (success) {
+                return crow::response(200, crow::json::wvalue{{"message", "Review added successfully"}});
+            } else {
+                return crow::response(500, crow::json::wvalue{{"error", "Failed to add review"}});
+            }
+        } catch (const std::exception& e) {
+            return crow::response(500, crow::json::wvalue{{"error", std::string("Exception: ") + e.what()}});
+        }
+    });
 }

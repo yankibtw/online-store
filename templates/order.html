@@ -68,22 +68,21 @@
                 <hr>
                 <div class="exitInfo">
                     <h1 class="title" style="font-size: 32px; margin-top: 50px; margin-bottom: 34px;">Итог</h1>
-                    <h3>Общая стоимость заказа:      <mark>122 244 ₽</mark></h3>
-                    <h3>Колличество товаров:      <mark>4</mark></h3>
-                    <h3>Адрес:      <mark>Какой-то адрес</mark></h3>
-                    <h3>Способ оплаты:      <mark>Картой</mark></h3>
+                    <h3>Общая стоимость заказа:      <mark id="totalPrice">122 244 ₽</mark></h3>
+                    <h3>Колличество товаров:      <mark id="totalQuantity">4</mark></h3>
+                    <h3>Способ оплаты:      <mark id="payStatus">Наличными</mark></h3>
                 </div>
                 <div class="regModal" style="box-shadow: none; padding: 0;">
-                    <button onclick="" style="font-family: 'Montserrat'; font-size: 16px;">Оформить заказ</button>
+                    <button onclick="placeOrder();" style="font-family: 'Montserrat'; font-size: 16px;">Оформить заказ</button>
                 </div>
             </div> 
             <div id="payment-methods">
                 <h1 class="title" style="font-size: 32px; margin-bottom: 20px;">Выберите способ оплаты</h1>
                 <div class="payment-options">
-                    <div class="payment-option active" data-value="cash">
+                    <div class="payment-option active" data-value="Наличными">
                     💵 Наличными
                     </div>
-                    <div class="payment-option" data-value="sbp">
+                    <div class="payment-option" data-value="СБП">
                     🏦 Через СБП
                     </div>
                 </div>
@@ -92,6 +91,6 @@
     </main>
     {{> includes/footer.html}}
     <script src="../static/js/catalog.js"></script>
-    <script src="../static/js/order.js" defer></script>
+    <script src="../static/js/order.js"></script>
 </body>
 </html>

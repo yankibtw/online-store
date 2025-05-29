@@ -38,7 +38,6 @@ html, body {
     font-size: 48px;
     margin-bottom: 60px;
 }
-
 .product{
     display: flex;
     border: solid;
@@ -47,7 +46,7 @@ html, body {
     border-width: 1px;
     padding: 20px;
     margin-bottom: 60px;
-    width: 1120px;
+    width: 1050px;
     justify-content: space-between;
 }
 
@@ -94,6 +93,7 @@ html, body {
 .product-inc a{
     display: flex;
 }
+
 .product-inc h4{
     margin: 0;
     font-family: "Montserrat", sans-serif;

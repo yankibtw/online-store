@@ -59,6 +59,39 @@ bool Database::registerUser(const std::string& firstName, const std::string& las
     }
 }
 
+std::optional<std::string> Database::getUsernameBySession(const std::string& session_id) {
+    try {
+        pqxx::work W(*conn_);
+
+        pqxx::result session_result = W.exec_params(
+            "SELECT user_id FROM sessions WHERE session_id = $1", session_id
+        );
+
+        if (session_result.empty()) {
+            return std::nullopt;
+        }
+
+        std::string user_id = session_result[0]["user_id"].as<std::string>();
+
+        pqxx::result user_result = W.exec_params(
+            "SELECT first_name, last_name FROM users WHERE id = $1", user_id
+        );
+
+        if (user_result.empty()) {
+            return std::nullopt;
+        }
+
+        std::string first_name = user_result[0]["first_name"].as<std::string>();
+        std::string last_name = user_result[0]["last_name"].as<std::string>();
+
+        return first_name + " " + last_name;
+
+    } catch (const std::exception& e) {
+        std::cerr << "Error in getUsernameBySession: " << e.what() << std::endl;
+        return std::nullopt;
+    }
+}
+
 std::optional<std::string> Database::authenticateUser(const std::string& email, const std::string& password, bool& userNotFound) {
     try {
         pqxx::work W(*conn_);
@@ -154,19 +187,36 @@ std::vector<Product> Database::getProducts(int limit) {
     try {
         pqxx::work W(*conn_);
         pqxx::result r = W.exec_params(
-            "SELECT p.id, p.name, b.name AS brand, pi.image_url, p.price "
+            "SELECT p.id, p.name, "
+            "COALESCE(b.name, 'Без бренда') AS brand, "
+            "COALESCE(pi.image_url, '/static/img/default.png') AS image_url, "
+            "p.price, "
+            "COALESCE(c.name, 'Без категории') AS category, "
+            "COALESCE(pc.name, 'Без категории') AS parent_category, "
+            "COALESCE(pv.sku, '') AS sku, "
+            "COALESCE(pv.stock_quantity, 0) AS stock_quantity "
             "FROM products p "
             "LEFT JOIN brands b ON p.brand_id = b.id "
             "LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_main = true "
+            "LEFT JOIN categories c ON p.category_id = c.id "
+            "LEFT JOIN categories pc ON c.parent_id = pc.id "
+            "LEFT JOIN LATERAL ("
+            "   SELECT sku, stock_quantity FROM product_variants "
+            "   WHERE product_id = p.id LIMIT 1"
+            ") pv ON true "
             "LIMIT $1", limit);
 
         for (auto row : r) {
             Product p;
             p.id = row["id"].as<int>();
             p.name = row["name"].as<std::string>();
-            p.brand = row["brand"].is_null() ? "Без бренда" : row["brand"].as<std::string>();
-            p.image_url = row["image_url"].is_null() ? "/static/img/default.png" : row["image_url"].as<std::string>();
+            p.brand = row["brand"].as<std::string>();
+            p.image_url = row["image_url"].as<std::string>();
             p.price = row["price"].as<double>();
+            p.category = row["category"].as<std::string>();
+            p.parent_category = row["parent_category"].as<std::string>();
+            p.sku = row["sku"].as<std::string>();
+            p.stock_quantity = row["stock_quantity"].as<int>();  
             products.push_back(p);
         }
     } catch (const std::exception& e) {
@@ -176,20 +226,27 @@ std::vector<Product> Database::getProducts(int limit) {
 }
 
 Product Database::getProductById(int id) {
-
     Product p;
     try {
         pqxx::work W(*conn_);
+        
         pqxx::result r = W.exec_params(
-            "SELECT p.id, p.name, COALESCE(b.name, 'Без бренда') AS brand, "
+            "SELECT p.id, p.name, "
+            "COALESCE(b.name, 'Без бренда') AS brand, "
             "COALESCE(pi.image_url, '/static/img/default.png') AS image_url, "
-            "p.price, COALESCE(p.description, '') AS description, p.discount_price, "
-            "pv.sku "
+            "p.price, p.discount_price, "
+            "COALESCE(p.description, '') AS description, "
+            "pv.sku, "
+            "COALESCE(c.name, 'Без категории') AS category, "
+            "COALESCE(pc.name, 'Без категории') AS parent_category "
             "FROM products p "
             "LEFT JOIN brands b ON p.brand_id = b.id "
             "LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_main = true "
+            "LEFT JOIN categories c ON p.category_id = c.id "
+            "LEFT JOIN categories pc ON c.parent_id = pc.id "
             "LEFT JOIN product_variants pv ON p.id = pv.product_id "
-            "WHERE p.id = $1", id
+            "WHERE p.id = $1 "
+            "LIMIT 1", id
         );
 
         if (!r.empty()) {
@@ -201,13 +258,37 @@ Product Database::getProductById(int id) {
             p.price = row["price"].as<double>();
             p.discount_price = row["discount_price"].as<double>();
             p.description = row["description"].as<std::string>();
-            p.sku = row["sku"].as<std::string>();
+            p.sku = row["sku"].is_null() ? "" : row["sku"].as<std::string>();
+            p.category = row["category"].as<std::string>();
+            p.parent_category = row["parent_category"].as<std::string>();
+        } else {
+            return p;
         }
+
+        pqxx::result images_res = W.exec_params(
+            "SELECT image_url, is_main FROM product_images WHERE product_id = $1 ORDER BY is_main DESC, id ASC",
+            id
+        );
+
+        p.images.clear();
+        for (const auto& img_row : images_res) {
+            Image img;
+            img.url = img_row["image_url"].as<std::string>();
+            img.is_main = img_row["is_main"].as<bool>();
+            p.images.push_back(img);
+        }
+
+        if (p.image_url.empty() && !p.images.empty()) {
+            p.image_url = p.images[0].url;
+        }
+
+        W.commit();
     } catch (const std::exception& e) {
         std::cerr << "Error fetching product by ID: " << e.what() << std::endl;
     }
     return p;
 }
+
 
 std::vector<crow::json::wvalue> Database::getReviewsByProduct(int productId) {
     std::vector<crow::json::wvalue> reviews;
@@ -485,5 +566,94 @@ void Database::updateCartItemQuantity(int cart_item_id, int quantity) {
     pqxx::work W(*conn_);
     W.exec_params("UPDATE cart_items SET quantity = $1 WHERE id = $2", quantity, cart_item_id);
     W.commit();
+}
+
+bool Database::createOrder(const std::string& session_id, const std::string& payment_method) {
+    try {
+        pqxx::work txn(*conn_);
+        
+        pqxx::result user_res = txn.exec_params("SELECT user_id FROM sessions WHERE session_id = $1", session_id);
+        if (user_res.empty()) {
+            std::cerr << "Invalid session id: " << session_id << std::endl;
+            throw std::runtime_error("Invalid session");
+        }
+        int user_id = user_res[0]["user_id"].as<int>();
+
+        pqxx::result cart_res = txn.exec_params(
+            R"(
+                SELECT ci.product_id, ci.size, ci.quantity, COALESCE(p.discount_price, p.price) AS price
+                FROM cart_items ci
+                JOIN products p ON ci.product_id = p.id
+                WHERE ci.user_id = $1
+            )", user_id
+        );
+
+        if (cart_res.empty()) {
+            std::cerr << "Cart is empty for user_id: " << user_id << std::endl;
+            throw std::runtime_error("Cart is empty");
+        }
+
+        pqxx::result order_res = txn.exec_params(
+            "INSERT INTO orders (user_id, payment_method, status) VALUES ($1, $2, 'completed') RETURNING id",
+            user_id, payment_method
+        );
+
+        int order_id = order_res[0]["id"].as<int>();
+
+        for (auto row : cart_res) {
+            int product_id = row["product_id"].as<int>();
+            std::string size = row["size"].is_null() ? "" : row["size"].as<std::string>();
+            int quantity = row["quantity"].as<int>();
+            double price = row["price"].as<double>();
+
+            txn.exec_params(
+                "INSERT INTO order_items (order_id, product_id, size, quantity, price) VALUES ($1, $2, $3, $4, $5)",
+                order_id, product_id, size, quantity, price
+            );
+        }
+
+        txn.exec_params("DELETE FROM cart_items WHERE user_id = $1", user_id);
+
+        txn.commit();
+
+        return true;
+
+    } catch (const std::exception& e) {
+        std::cerr << "Error creating order: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+bool Database::addReview(int product_id,
+                         const std::string& user_name,
+                         const std::string& review_date,
+                         const std::string& review_text,
+                         const std::string& selected_size,
+                         int rating,
+                         const std::vector<std::string>& image_urls) {
+    try {
+        pqxx::work txn(*conn_);
+
+        pqxx::result r = txn.exec_params(
+            "INSERT INTO reviews (product_id, user_name, review_date, review_text, selected_size, rating) "
+            "VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
+            product_id, user_name, review_date, review_text, selected_size, rating
+        );
+
+        int review_id = r[0][0].as<int>();
+
+        for (const auto& url : image_urls) {
+            txn.exec_params(
+                "INSERT INTO review_images (review_id, image_url) VALUES ($1, $2)",
+                review_id, url
+            );
+        }
+
+        txn.commit();
+        return true;
+    } catch (const std::exception& e) {
+        std::cerr << "Error adding review: " << e.what() << std::endl;
+        return false;
+    }
 }
 

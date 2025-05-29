@@ -50,8 +50,8 @@ document.addEventListener("click", (e) => {
   }
 });
 
+const payStatusElement = document.getElementById("payStatus");
 const paymentInputs = document.querySelectorAll('input[name="payment"]');
-
 const paymentOptions = document.querySelectorAll(".payment-option");
 let selectedPayment = "cash"; 
 
@@ -60,7 +60,109 @@ paymentOptions.forEach(option => {
     paymentOptions.forEach(opt => opt.classList.remove("active"));
     option.classList.add("active");
     selectedPayment = option.getAttribute("data-value");
-    console.log("Выбран способ оплаты:", selectedPayment);
+    payStatusElement.textContent = selectedPayment;
+  });
+});
+
+
+function renderSelectedProducts(cart) {
+    const container = document.getElementById('cartContainer');
+    container.innerHTML = '';
+
+    if (cart.length === 0) {
+        container.innerHTML = 'Вы ничего не выбрали.';
+        return;
+    }
+
+    let totalAmount = 0;
+    let totalQuantity = 0;
+
+    cart.forEach(item => {
+        const imageUrl = item.image_url || '/static/img/default-image.png';
+        const quantity = item.quantity;
+        const price = item.price;
+        const discountPrice =  item.price - item.discount_price ?? item.price;
+        const finalPrice = discountPrice * quantity;
+        totalAmount += finalPrice;
+        totalQuantity += quantity;
+
+        const card = `
+            <div style="display: flex; gap: 25px; margin-bottom: 20px;">
+                <div class="product">
+                    <div style="display: flex; gap: 40px; align-items: center;">
+                        <img src="${imageUrl}" alt="" />
+                        <div class="product-information">
+                            <h1 style="max-width: 600px;">${item.name}</h1>
+                            <h5>Размер: ${item.size || 'N/A'}</h5>
+                            <h5>Скидка: ${item.discount_price ? (item.discount_price * quantity).toLocaleString('ru-RU') + "₽" : 'Без скидки'}</h5>
+                            <h5>Артикул: ${item.sku || 'N/A'}</h5>
+                        </div>
+                    </div>
+                    <div class="product-another-content" style="align-items: flex-end;">
+                        <h1 class="product-cost" data-price="${price}">
+                            ${(discountPrice * quantity).toLocaleString('ru-RU')}₽
+                            <h5>Количество: ${item.quantity}</h5>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        container.insertAdjacentHTML('beforeend', card);
+    });
+
+    const totalPriceElement = document.getElementById("totalPrice");
+    if (totalPriceElement) {
+        totalPriceElement.textContent = totalAmount.toLocaleString('ru-RU') + " ₽";
+    }
+
+    const totalQuantityElement = document.getElementById("totalQuantity");
+    if (totalQuantityElement) {
+        totalQuantityElement.textContent = totalQuantity.toLocaleString('ru-RU') + " шт.";
+    }
+}
+
+function loadSelectedProducts(productIds) {
+    fetch('/api/checkout/products', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ product_ids: productIds })
+    })
+    .then(response => response.json())
+    .then(data => {
+        renderSelectedProducts(data);
+    })
+    .catch(error => {
+        console.error("Ошибка загрузки выбранных товаров:", error);
+        document.getElementById('cartContainer').textContent = 'Не удалось загрузить выбранные товары.';
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const storedIds = localStorage.getItem('selectedProductIds');
+    if (!storedIds) {
+        document.getElementById('cartContainer').textContent = 'Нет выбранных товаров для отображения.';
+        return;
+    }
+
+    const productIds = JSON.parse(storedIds);
+    if (!Array.isArray(productIds) || productIds.length === 0) {
+        document.getElementById('cartContainer').textContent = 'Список товаров пуст.';
+        return;
+    }
+
+    loadSelectedProducts(productIds);
+});
+
+paymentOptions.forEach(option => {
+  option.addEventListener("click", () => {
+    paymentOptions.forEach(opt => opt.classList.remove("active"));
+    option.classList.add("active");
+    selectedPayment = option.getAttribute("data-value");
+    payStatusElement.textContent = selectedPayment;
   });
 });
 

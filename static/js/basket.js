@@ -113,7 +113,6 @@ function updateSummary(cart) {
         const container = document.getElementById('cartContainer');
         container.insertAdjacentHTML('beforeend', summaryHTML);
     }
-
     addCheckoutListener();  
 }
 
@@ -124,6 +123,10 @@ function loadCart() {
     })
     .then(response => response.json())
     .then(data => {
+        if (data.status === "empty") {
+            document.getElementById('cartContainer').innerHTML = 'Ваша корзина пуста.';
+            return;
+        }
         cart = data;
         renderCart(cart);
     })
@@ -196,12 +199,15 @@ const card = `
         </div>
     </div>
 `;
-
-
         container.insertAdjacentHTML('beforeend', card);
     });
 
     updateSummary(cart); 
+    document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            updateSummary(cart);
+        });
+    });
 }
 
 function getPlural(n, forms) {
@@ -255,34 +261,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function addCheckoutListener() {
     const checkoutBtn = document.getElementById('checkoutBtn');
+    const checkboxes = document.querySelectorAll('.item-checkbox');
+
+    checkboxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+        const selectedIds = Array.from(document.querySelectorAll('.item-checkbox:checked'))
+                                .map(cb => parseInt(cb.value));
+        localStorage.setItem('selectedProductIds', JSON.stringify(selectedIds));
+    });
+    });
+
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', (event) => {
             event.preventDefault();
 
             const checkedCheckboxes = document.querySelectorAll('.item-checkbox:checked');
-            const selectedIds = Array.from(checkedCheckboxes).map(cb => cb.value);
+            const selectedIds = Array.from(checkedCheckboxes).map(cb => parseInt(cb.value));
 
             if (selectedIds.length === 0) {
                 alert('Пожалуйста, выберите хотя бы один товар для оплаты.');
                 return;
             }
 
-            fetch('/api/checkout', {
+            fetch('/api/checkout/products', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({ product_ids: selectedIds })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.payment_url) {
-                    window.location.href = data.payment_url;
-                } else {
-                    alert('Ошибка при переходе к оплате.');
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка при получении данных товаров');
                 }
+                return response.json();
             })
-            .catch(() => alert('Ошибка соединения с сервером.'));
+            .then(data => {
+                localStorage.setItem('checkoutProducts', JSON.stringify(data));
+                window.location.href = '/order';
+            })
+            .catch((error) => {
+                console.error(error);
+                alert('Ошибка соединения с сервером.');
+            });
         });
     }
 }
-
