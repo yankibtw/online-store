@@ -1,0 +1,108 @@
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reviewModalLabel">Оставить отзыв</h5>
+        <a type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></a>
+      </div>
+      <div class="modal-body">
+        <form id="reviewForm">
+          <div class="mb-3">
+            <label class="form-label">Оценка:</label>
+            <div id="starRating">
+              <span class="star" data-value="1">★</span>
+              <span class="star" data-value="2">★</span>
+              <span class="star" data-value="3">★</span>
+              <span class="star" data-value="4">★</span>
+              <span class="star" data-value="5">★</span>
+            </div>
+            <input type="hidden" id="ratingValue" name="rating" required>
+            <div class="text-danger d-none" id="ratingError">Пожалуйста, выберите оценку</div>
+          </div>
+          <div class="mb-3">
+            <label for="sizeSelect" class="form-label">Размер:</label>
+            <select class="form-select" id="sizeSelect" required>
+              <option value="">Выберите размер</option>
+              <option>XS</option>
+              <option>S</option>
+              <option>M</option>
+              <option>L</option>
+              <option>XL</option>
+              <option>XXL</option>
+            </select>
+            <div class="text-danger d-none" id="sizeError">Выберите размер</div>
+          </div>
+          <div class="mb-3">
+            <label for="photoUpload" class="form-label">Фото товара:</label>
+            <input class="form-control" type="file" id="photoUpload" multiple accept="image/*">
+            <div id="preview" class="mt-2 d-flex gap-2 flex-wrap"></div>
+          </div>
+          <div class="mb-3">
+            <label for="reviewText" class="form-label">Комментарий:</label>
+            <textarea class="form-control" id="reviewText" rows="3" placeholder="Поделитесь своим впечатлением..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Отправить отзыв</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+    .star {
+        font-size: 1.6rem;
+        cursor: pointer;    
+        color: lightgray;
+        user-select: none;
+        transition: color 0.2s ease;
+    }
+
+    .star.selected {
+        color: gold;
+    }
+
+    .star.hovered {
+        color: gold;
+    }
+
+    .form-select{
+        padding: 13px;
+        margin: 10px 0;
+        border: 1px solid #CFCFCF;
+        border-radius: 15px;    
+        font-size: 16px;
+    }
+
+    #photoUpload{
+        width: 100%;
+        padding: 13px;
+        margin: 10px 0;
+        border: 1px solid #CFCFCF;
+        border-radius: 15px;    
+        font-size: 16px;
+    }
+
+    #reviewModal{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        border-radius: 20px;
+        z-index: 999;
+    }
+
+    .modal-backdrop {
+        --bs-backdrop-bg: rgba(0, 0, 0, 0.5);
+        --bs-backdrop-opacity: 0.5;
+        z-index: 1;     
+    }
+
+    .mb-3{  
+        text-align: start;
+    }
+</style>
+<script src="/static/js/review.js" defer></script>

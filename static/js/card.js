@@ -67,33 +67,42 @@ document.addEventListener("DOMContentLoaded", function () {
             reviewsContainer.innerHTML = `
                 <div class="add-review">
                     <p>У данного товара нет отзывов. Станьте первым, кто оставил отзыв об этом товаре!</p>
-                    <button id="add-review-btn">Написать отзыв</button>
+                    <button id="add-review-btn" data-bs-toggle="modal" data-bs-target="#reviewModal">Написать отзыв</button>
                 </div>`;
         });
 
     function showMessage(msg) {
         reviewsContainer.innerHTML = `<p>${msg}</p>`;
     }
-
+    
     function renderReviews(reviews = []) {
         if (!Array.isArray(reviews) || reviews.length === 0) {
             reviewsContainer.innerHTML = `
                 <div class="add-review">
                     <p>У данного товара нет отзывов. Станьте первым, кто оставил отзыв об этом товаре!</p>
-                    <button id="add-review-btn">Написать отзыв</button>
+                    <button id="add-review-btn" data-bs-toggle="modal" data-bs-target="#reviewModal">Написать отзыв</button>
                 </div>`;
             return;
         }
 
         reviewsContainer.innerHTML = reviews.map(renderReview).join('');
+
+        document.querySelectorAll(".review-image").forEach(img => {
+            img.addEventListener("click", () => {
+                const modal = document.getElementById("imageModal");
+                const modalImg = document.getElementById("modalImage");
+                modal.style.display = "flex";
+                modalImg.src = img.src;
+            });
+        });
     }
 
     function renderReview({ userName, reviewText, selectedSize, rating, reviewDate, images = [] }) {
-        const avatar = images[0] || "../static/img/card-img/review.png";
+        const avatar = "../static/img/card-img/user.png";
         const stars = "★".repeat(rating);
 
         const imageBlock = images.length
-            ? `<div class="images">${images.map(url => `<img src="${url}" alt="Изображение отзыва">`).join('')}</div>`
+            ? `<div class="images">${images.map(url => `<img src="${url}" alt="Изображение отзыва" class="review-image">`).join('')}</div>`
             : '';
 
         return `
@@ -101,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="user">
                     <img src="${avatar}" alt="User">
                     <div class="user-info">
-                        <strong>${userName}</strong>
+                        <h5>${userName}</h5>
                         <div class="review-mark">
                             <p>Размер: ${selectedSize || "Не указан"}</p>
                             <div style="display: flex; gap: 30px">
@@ -111,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
                     </div>
                 </div>
-                <p>${reviewText}</p>
+                <p style="margin-top: 25px;">${reviewText}</p>
                 ${imageBlock}
             </div>`;
     }
@@ -216,81 +225,17 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    document.body.addEventListener("click", function(event) {
-        if (event.target && event.target.id === "add-review-btn") {
-            const reviewFormContainer = document.getElementById("review-form-container");
-            if (reviewFormContainer) {
-                reviewFormContainer.style.display = "block";
-                window.scrollTo({
-                    top: reviewFormContainer.offsetTop,
-                    behavior: 'smooth'
-                });
-            } else {
-                console.warn('Элемент #review-form-container не найден в DOM');
+    const modal = document.getElementById("imageModal");
+    const modalImg = document.getElementById("modalImage");
+    const closeBtn = document.querySelector(".close-btn");
+
+    if (closeBtn && modal) {
+        closeBtn.onclick = () => modal.style.display = "none";
+
+        modal.onclick = (e) => {
+            if (e.target === modal) {
+                modal.style.display = "none";
             }
-        }
-    });
-
-    const cancelBtn = document.getElementById("cancel-review");
-    if (cancelBtn) {
-        cancelBtn.addEventListener("click", function () {
-            const formContainer = document.getElementById("review-form-container");
-            if (formContainer) {
-                formContainer.style.display = "none";
-            }
-        });
-    }
-
-    const reviewForm = document.getElementById("review-form");
-    if (reviewForm) {
-        reviewForm.addEventListener("submit", async function (e) {
-            e.preventDefault();
-
-            const formData = new FormData(e.target);
-            const rating = formData.get("rating");
-            const comment = formData.get("comment").trim();
-            const selected_size = formData.get("selected_size").trim();
-            const image_url = formData.get("image_url").trim();
-
-            if (!rating || !comment) {
-                alert("Пожалуйста, укажите рейтинг и комментарий.");
-                return;
-            }
-
-            const image_urls = image_url ? [image_url] : [];
-
-            try {
-                const response = await fetch(`/api/reviews/add/${productId}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "include",
-                    body: JSON.stringify({
-                        rating: parseInt(rating),
-                        comment,
-                        selected_size,
-                        image_urls
-                    }),
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    alert(result.message || "Отзыв успешно добавлен!");
-                    document.getElementById("review-form-container").style.display = "none";
-                    e.target.reset();
-
-                    fetch(`/api/reviews/${productId}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            renderReviews(data.reviews);
-                        });
-                } else {
-                    alert(result.error || "Ошибка при добавлении отзыва.");
-                }
-            } catch (err) {
-                console.error(err);
-                alert("Ошибка сети при отправке отзыва.");
-            }
-        });
+        };
     }
 });

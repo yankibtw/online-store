@@ -229,7 +229,7 @@ Product Database::getProductById(int id) {
     Product p;
     try {
         pqxx::work W(*conn_);
-        
+
         pqxx::result r = W.exec_params(
             "SELECT p.id, p.name, "
             "COALESCE(b.name, 'Без бренда') AS brand, "
@@ -656,4 +656,3 @@ bool Database::addReview(int product_id,
         return false;
     }
 }
-

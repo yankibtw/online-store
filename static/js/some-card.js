@@ -38,7 +38,7 @@ function renderProducts(products) {
                         <h3>${product.brand}</h3>
                         <h2>${product.price.toFixed(2)} ₽</h2>
                     </div>
-                    <button class="accept-card-btn" onclick="window.location.href='/card?id=${product.id}'">Подробнее</button>
+                    <button class="accept-card-btn" onclick="window.location.href='/card?id=${product.id}'" data-product-id="${product.id}">Подробнее</button>
                 </div>
             </div>
         `;
