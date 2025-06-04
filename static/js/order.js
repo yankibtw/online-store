@@ -166,3 +166,49 @@ paymentOptions.forEach(option => {
   });
 });
 
+function validateForm() {
+    let isValid = true;
+
+    const name = document.getElementById("userName");
+    const phone = document.getElementById("userPhone");
+    const email = document.getElementById("userEmail");
+    const address = document.getElementById("userAdress");
+
+    const nameError = document.getElementById("userNameError");
+    const phoneError = document.getElementById("userPhoneError");
+    const emailError = document.getElementById("userEmailError");
+    const addressError = document.getElementById("userAdressError");
+
+    const nameRegex = /^[А-Яа-яЁё\s]{2,}$/;
+    if (!nameRegex.test(name.value.trim())) {
+        nameError.style.display = "block";
+        isValid = false;
+    } else {
+        nameError.style.display = "none";
+    }
+
+    const phoneRegex = /^(?:\+7|8)\d{10}$/;
+    if (!phoneRegex.test(phone.value.trim())) {
+        phoneError.style.display = "block";
+        isValid = false;
+    } else {
+        phoneError.style.display = "none";
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.value.trim())) {
+        emailError.style.display = "block";
+        isValid = false;
+    } else {
+        emailError.style.display = "none";
+    }
+
+    if (address.value.trim().length < 5) {
+        addressError.style.display = "block";
+        isValid = false;
+    } else {
+        addressError.style.display = "none";
+    }
+
+    return isValid;
+}

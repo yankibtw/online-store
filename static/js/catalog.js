@@ -1,5 +1,6 @@
 let currentPage = 1;
 const productsPerPage = 6;
+let filteredProducts = null;
 
 function setupSearch() {
     const searchInput = document.getElementById('searchInput');
@@ -155,15 +156,63 @@ function renderPagination(totalPages) {
     });
 }
 
-function updateView(filteredProducts = null) {
-    const productsToUse = filteredProducts || allProducts;
+function updateView(products = null) {
+    const productsToUse = products || allProducts;
     const start = (currentPage - 1) * productsPerPage;
     const end = start + productsPerPage;
     
     renderProducts(productsToUse.slice(start, end));
-
+    
     const totalPages = Math.ceil(productsToUse.length / productsPerPage);
     renderPagination(totalPages);
 }
 
-document.addEventListener('DOMContentLoaded', loadProducts);
+document.addEventListener('DOMContentLoaded', () => {
+    loadProducts(); 
+    setupCategoryFilter();
+});
+
+function setupCategoryFilter() {
+    const categoryLinks = document.querySelectorAll('.category-group a[data-category]');
+    
+    categoryLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const selectedCategory = link.getAttribute('data-category');
+            
+            if (selectedCategory === 'all') {
+                filteredProducts = null;
+            } else {
+                filteredProducts = allProducts.filter(product => product.category === selectedCategory);
+            }
+            
+            currentPage = 1;
+            updateView(filteredProducts);
+        });
+    });
+}
+
+
+const minPriceInput = document.getElementById('minPrice');
+const maxPriceInput = document.getElementById('maxPrice');
+
+const minPriceDisplay = document.getElementById('minPriceDisplay');
+const maxPriceDisplay = document.getElementById('maxPriceDisplay');
+
+minPriceInput.addEventListener('input', () => {
+    let val = minPriceInput.value.trim();
+    if (val === '' || isNaN(val)) {
+        minPriceDisplay.textContent = '0.00';
+    } else {
+        minPriceDisplay.textContent = Number(val).toFixed(2);
+    }
+});
+
+maxPriceInput.addEventListener('input', () => {
+    let val = maxPriceInput.value.trim();
+    if (val === '' || isNaN(val)) {
+        maxPriceDisplay.textContent = '0.00';
+    } else {
+        maxPriceDisplay.textContent = Number(val).toFixed(2);
+    }
+});

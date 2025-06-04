@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const url = await uploadToCloudinary(file);
         image_urls.push(url);
       } catch (err) {
-        alert("Ошибка при загрузке изображения. Попробуйте другое фото.");
+        showToast("Ошибка при загрузке изображения. Попробуйте другое фото.", "danger");
         return;
       }
     }
@@ -114,19 +114,35 @@ document.addEventListener("DOMContentLoaded", function () {
       const result = await response.json();
 
       if (response.ok) {
-        alert("Отзыв отправлен!");
+        showToast("Отзыв отправлен!", "success");
         const modal = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
         modal.hide();
         this.reset();
         previewContainer.innerHTML = "";
         stars.forEach(s => s.classList.remove("selected"));
-        
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
       } else {
-        alert("Ошибка: " + (result.error || "не удалось отправить отзыв."));
+        showToast("Не удалось отправить отзыв.!", "danger");
       }
     } catch (err) {
-      alert("Сетевая ошибка при отправке отзыва.");
+      showToast("Не удалось отправить отзыв.!", "danger");
       console.error(err);
     }
   });
 });
+
+document.querySelectorAll('.review-photo').forEach(photo => {
+  photo.addEventListener('click', () => {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    modalImg.src = photo.src;
+    modal.style.display = 'flex';
+  });
+});
+
+function closeImageModal() {
+  document.getElementById('imageModal').style.display = 'none';
+}
+

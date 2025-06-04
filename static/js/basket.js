@@ -123,12 +123,20 @@ function loadCart() {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.status === "empty") {
-            document.getElementById('cartContainer').innerHTML = 'Ваша корзина пуста.';
+        const container = document.getElementById('cartContainer');
+
+        if (data.status === "empty" || data.length === 0) {
+            container.innerHTML = 'Ваша корзина пуста.';
+
+            const summary = document.querySelector('.basket-products-info');
+            if (summary) summary.remove();
+
             return;
         }
+
         cart = data;
         renderCart(cart);
+        updateSummary(cart);
     })
     .catch(error => {
         console.error('Ошибка при загрузке товаров в корзину:', error);
@@ -142,6 +150,10 @@ function renderCart(cart) {
 
     if (cart.length === 0) {
         container.innerHTML = 'Ваша корзина пуста.';
+
+        const summary = document.querySelector('.basket-products-info');
+        if (summary) summary.remove();
+        location.reload();
         return;
     }
 
@@ -226,9 +238,9 @@ function removeFromCart(productId) {
     })
     .then(response => {
         if (response.ok) {
-            loadCart(); 
+            loadCart();
         } else {
-            alert('Не удалось удалить товар из корзины');
+            showToast("Не удалось удалить товар из корзины!", "danger");
         }
     })
     .catch(error => {
@@ -263,12 +275,17 @@ function addCheckoutListener() {
     const checkoutBtn = document.getElementById('checkoutBtn');
     const checkboxes = document.querySelectorAll('.item-checkbox');
 
+    const initiallySelectedIds = Array.from(checkboxes)
+        .filter(cb => cb.checked)
+        .map(cb => parseInt(cb.value));
+    localStorage.setItem('selectedProductIds', JSON.stringify(initiallySelectedIds));
+
     checkboxes.forEach(cb => {
-    cb.addEventListener('change', () => {
-        const selectedIds = Array.from(document.querySelectorAll('.item-checkbox:checked'))
-                                .map(cb => parseInt(cb.value));
-        localStorage.setItem('selectedProductIds', JSON.stringify(selectedIds));
-    });
+        cb.addEventListener('change', () => {
+            const selectedIds = Array.from(document.querySelectorAll('.item-checkbox:checked'))
+                .map(cb => parseInt(cb.value));
+            localStorage.setItem('selectedProductIds', JSON.stringify(selectedIds));
+        });
     });
 
     if (checkoutBtn) {
@@ -279,7 +296,7 @@ function addCheckoutListener() {
             const selectedIds = Array.from(checkedCheckboxes).map(cb => parseInt(cb.value));
 
             if (selectedIds.length === 0) {
-                alert('Пожалуйста, выберите хотя бы один товар для оплаты.');
+                showToast("Пожалуйста, выберите хотя бы один товар для оплаты.", "danger");
                 return;
             }
 
@@ -301,7 +318,7 @@ function addCheckoutListener() {
             })
             .catch((error) => {
                 console.error(error);
-                alert('Ошибка соединения с сервером.');
+                showToast("Ошибка соединения с сервером.", "info");
             });
         });
     }

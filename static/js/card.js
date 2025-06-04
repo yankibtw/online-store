@@ -76,16 +76,36 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
     function renderReviews(reviews = []) {
-        if (!Array.isArray(reviews) || reviews.length === 0) {
-            reviewsContainer.innerHTML = `
-                <div class="add-review">
-                    <p>У данного товара нет отзывов. Станьте первым, кто оставил отзыв об этом товаре!</p>
-                    <button id="add-review-btn" data-bs-toggle="modal" data-bs-target="#reviewModal">Написать отзыв</button>
-                </div>`;
-            return;
+        const hasReviews = Array.isArray(reviews) && reviews.length > 0;
+
+        let html = '';
+
+        if (hasReviews) {
+            html += reviews.map(renderReview).join('');
+        } else {
+            html += `<p>У данного товара нет отзывов. Станьте первым, кто оставил отзыв об этом товаре!</p>`;
+        }
+        html += `
+            <div class="add-review" style="margin-top: 20px;">
+                <button id="add-review-btn" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                    Написать отзыв
+                </button>
+            </div>`;
+
+        reviewsContainer.innerHTML = html;
+
+        const mark = document.getElementById("mark-txt");
+
+        if (mark) {
+            if (reviews.length == 0) {
+                mark.textContent = "Нет отзывов";
+            } else {
+                const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
+                const avgRating = (totalRating / reviews.length).toFixed(1);
+                mark.textContent = `${reviews.length} отзыв(ов), средняя оценка: ${avgRating} ★`;
+            }
         }
 
-        reviewsContainer.innerHTML = reviews.map(renderReview).join('');
 
         document.querySelectorAll(".review-image").forEach(img => {
             img.addEventListener("click", () => {
@@ -184,13 +204,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 const result = await response.json();
 
                 if (response.ok) {
-                    alert("Товар добавлен в избранное!");
+                    showToast("Товар добавлен в избранное!", "success");
                 } else {
-                    alert("Войдите в аккаунт, чтобы добавить товар в избранное!");
+                    showToast("Войдите в аккаунт, чтобы добавить товар в избранное!", "danger");
                 }
             } catch (err) {
-                alert("Ошибка сети");
-                console.error(err);
+                showToast("Ошибка сети!", "danger");
             }
         });
     });
@@ -200,7 +219,7 @@ document.addEventListener("DOMContentLoaded", function () {
         addToCartBtn.addEventListener("click", async function () {
             const selectedSize = document.querySelector('input[name="size_option"]:checked');
             if (!selectedSize) {
-                alert("Пожалуйста, выберите размер перед добавлением в корзину.");
+                showToast("Пожалуйста, выберите размер перед добавлением в корзину.", "info");
                 return;
             }
 
@@ -214,13 +233,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const result = await response.json();
                 if (response.ok) {
-                    alert(result.message || "Товар успешно добавлен в корзину!");
+                    showToast("Товар успешно добавлен в корзину!", "success");
                 } else {
-                    alert(result.error || "Не удалось добавить товар в корзину.");
+                    showToast("Не удалось добавить товар в корзину!", "danger");
                 }
             } catch (err) {
-                console.error(err);
-                alert("Ошибка при добавлении в корзину.");
+                showToast("Ошибка при добавлении в корзину.", "danger");
             }
         });
     }
@@ -239,3 +257,13 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     }
 });
+
+document.getElementById('copyLinkBtn').addEventListener('click', () => {
+  const productLink = window.location.href;
+  navigator.clipboard.writeText(productLink).then(() => {
+    showToast("Ссылка скопирована в буфер обмена", "success");
+  }).catch(err => {
+    showToast("Не удалось скопировать ссылку", "danger");
+  });
+});
+

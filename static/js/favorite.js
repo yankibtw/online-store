@@ -57,8 +57,9 @@ function removeFromFavorites(productId) {
     .then(response => {
         if (response.ok) {
             loadFavorites(); 
+            showToast("Товар успешно удален из избранного.", "success");
         } else {
-            alert('Не удалось удалить товар из избранного');
+            showToast("Не удалось удалить товар из избранного.", "danger");
         }
     })
     .catch(error => {

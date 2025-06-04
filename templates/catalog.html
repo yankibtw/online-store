@@ -36,30 +36,32 @@
                 <hr>
                 <p>Категории</p>
                 <div class="category-group">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group"><a href="#">Верхняя одежда</a></li>
-                        <li class="list-group"><a href="#">Повседневная одежда</a></li>
-                        <li class="list-group"><a href="#">Спортивная и активная одежда</a></li>
-                        <li class="list-group"><a href="#">Офисная / деловая одежда</a></li>
-                        <li class="list-group"><a href="#">Вечерняя и торжественная одежда</a></li>
-                        <li class="list-group"><a href="#">Мужская одежда</a></li>
-                        <li class="list-group"><a href="#">Женская одежда</a></li>
-                        <li class="list-group"><a href="#">Детская одежда</a></li>
-                        <li class="list-group"><a href="#">Трендовая одежда</a></li>
-                      </ul>
+                  <ul class="list-group list-group-flush category-group">
+                      <li class="list-group-item"><a href="#" data-category="all">Показать всё</a></li>
+                      <li class="list-group-item"><a href="#" data-category="Верхняя одежда">Верхняя одежда</a></li>
+                      <li class="list-group-item"><a href="#" data-category="Повседневная одежда">Повседневная одежда</a></li>
+                      <li class="list-group-item"><a href="#" data-category="Спортивная и активная одежда">Спортивная и активная одежда</a></li>
+                      <li class="list-group-item"><a href="#" data-category="Офисная / деловая одежда">Офисная / деловая одежда</a></li>
+                      <li class="list-group-item"><a href="#" data-category="Вечерняя и торжественная одежда">Вечерняя и торжественная одежда</a></li>
+                      <li class="list-group-item"><a href="#" data-category="Мужская одежда">Мужская одежда</a></li>
+                      <li class="list-group-item"><a href="#" data-category="Женская одежда">Женская одежда</a></li>
+                      <li class="list-group-item"><a href="#" data-category="Детская одежда">Детская одежда</a></li>
+                      <li class="list-group-item"><a href="#" data-category="Трендовая одежда">Трендовая одежда</a></li>
+                  </ul>
                 </div>
                 <hr>
                 <p>Цена</p>
                 <div class="input-group mb-3">
                     <span class="input-group-text">₽</span>
-                    <span class="input-group-text">0.00</span>
+                    <span class="input-group-text" id="minPriceDisplay">0.00</span>
                     <input type="text" class="form-control" id="minPrice" placeholder="Минимум">
                 </div>          
                 <div class="input-group">
                     <input type="text" class="form-control" id="maxPrice" placeholder="Максимум">
                     <span class="input-group-text">₽</span>
-                    <span class="input-group-text">0.00</span>
+                    <span class="input-group-text" id="maxPriceDisplay">0.00</span>
                 </div>
+
                 <hr>
                 <button type="button" class="accept-btn" id="priceFilterBtn">Применить</button>                
             </div>
@@ -93,6 +95,7 @@
               </nav>
             </div>
         </div>
+        {{> includes/toaster.html}}
     </main>
     {{> includes/footer.html}}
     <script src="../static/js/catalog.js"></script>
