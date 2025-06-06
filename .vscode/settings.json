@@ -101,7 +101,10 @@
         "stack": "cpp",
         "pqxx": "cpp",
         "ranges": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "complex": "cpp",
+        "strstream": "cpp",
+        "typeindex": "cpp"
     },
     "sqltools.connections": [
         {

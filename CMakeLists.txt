@@ -12,8 +12,24 @@ include_directories(${CMAKE_SOURCE_DIR}/include/crow)
 find_package(libpqxx CONFIG REQUIRED)
 find_package(nlohmann_json REQUIRED)
 find_package(unofficial-sodium CONFIG REQUIRED)
+find_package(CURL REQUIRED)
 
-add_executable(server src/main.cpp)
+add_executable(server   src/main.cpp 
+                        src/wishlist_manager.cpp
+                        src/user_manager.cpp
+                        src/product_manager.cpp
+                        src/order_manager.cpp
+                        src/dbb.cpp
+                        src/cart_manager.cpp
+                        src/controllers/auth_controller.cpp
+                        src/controllers/cart_controller.cpp
+                        src/controllers/cookie_utils.cpp
+                        src/controllers/order_controller.cpp
+                        src/controllers/product_controller.cpp
+                        src/controllers/wishlist_controller.cpp
+                        src/controllers/page_controller.cpp)
+                        
 
 target_link_libraries(server PRIVATE libpqxx::pqxx)
 target_link_libraries(server PRIVATE unofficial-sodium::sodium)
+target_link_libraries(server PRIVATE CURL::libcurl)

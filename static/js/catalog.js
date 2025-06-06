@@ -216,3 +216,4 @@ maxPriceInput.addEventListener('input', () => {
         maxPriceDisplay.textContent = Number(val).toFixed(2);
     }
 });
+

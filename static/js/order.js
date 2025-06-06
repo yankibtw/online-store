@@ -53,7 +53,7 @@ document.addEventListener("click", (e) => {
 const payStatusElement = document.getElementById("payStatus");
 const paymentInputs = document.querySelectorAll('input[name="payment"]');
 const paymentOptions = document.querySelectorAll(".payment-option");
-let selectedPayment = "cash"; 
+let selectedPayment = "Наличные"; 
 
 paymentOptions.forEach(option => {
   option.addEventListener("click", () => {
@@ -212,3 +212,39 @@ function validateForm() {
 
     return isValid;
 }
+
+document.getElementById("placeOrderBtn").addEventListener("click", async () => {
+    if (!validateForm()) {
+        return;
+    }
+    const payment_method = selectedPayment;
+    const address = document.getElementById("userAdress").value.trim();
+    try {
+        const response = await fetch("/api/order/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                payment_method: payment_method,
+                address: address 
+            })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            showToast("Заказ успешно оформлен!", "success");
+            localStorage.removeItem("selectedProductIds");
+            setTimeout(() => {
+                window.location.href = "/basket";
+            }, 1500);
+        } else {
+            showToast("Ошибка оформления заказа! Попробуйте позже.", "danger");
+        }
+
+    } catch (error) {
+        showToast("Ошибка оформления заказа! Попробуйте позже.", "danger");
+    }
+});
