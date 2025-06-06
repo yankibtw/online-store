@@ -14,7 +14,7 @@
 
 Технологии
 
-Frontend: HTML, CSS, Boostrap
+Frontend: HTML, CSS, Boostrap, JS
 
 Backend: Crow(C++)
 
