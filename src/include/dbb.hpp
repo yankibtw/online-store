@@ -14,7 +14,7 @@ struct Image {
 };
 
 struct Product {
-    int id;
+    int id = 0;
     std::string name;
     std::string brand;
     std::string image_url;
@@ -92,9 +92,9 @@ public:
     ~Database();
 
     bool connect();
-    std::string generateSessionId();
+    static std::string generateSessionId();
     pqxx::connection* getConnection();
-    std::string extractSessionId(const std::string& cookieHeader);
+    static std::string extractSessionId(const std::string& cookieHeader);
 
 private:
     std::string db_name_;

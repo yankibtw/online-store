@@ -2,22 +2,23 @@
 
 UserManager::UserManager(Database& db) : db_(db) {}
 
-
 bool UserManager::registerUser(const std::string& firstName, const std::string& lastName,
                                const std::string& email, const std::string& phone,
                                const std::string& password) {
-    try {
-        pqxx::work W(*db_.getConnection());
-        W.exec_params(
-            "INSERT INTO users (first_name, last_name, email, phone, password) VALUES ($1, $2, $3, $4, $5)",
-            firstName, lastName, email, phone, hashPassword(password)
-        );
-        W.commit();
-        return true;
-    } catch (const std::exception& e) {
-        std::cerr << "Error registering user: " << e.what() << std::endl;
-        return false;
+    pqxx::work txn(*db_.getConnection());
+
+    pqxx::result check = txn.exec_params("SELECT COUNT(*) FROM users WHERE email = $1", email);
+    if (check[0][0].as<int>() > 0) {
+        return false; 
     }
+
+    txn.exec_params(
+        "INSERT INTO users (first_name, last_name, email, phone, password) VALUES ($1, $2, $3, $4, $5)",
+        firstName, lastName, email, phone, hashPassword(password));
+
+
+    txn.commit();
+    return true;
 }
 
 std::optional<std::string> UserManager::authenticateUser(const std::string& email,
@@ -95,11 +96,14 @@ std::string UserManager::hashPassword(const std::string& password) {
 
 bool UserManager::isEmailAlreadyRegistered(const std::string& email) {
     try {
-        pqxx::work W(*db_.getConnection());
-        pqxx::result r = W.exec_params("SELECT 1 FROM users WHERE email=$1", email);
+        pqxx::work txn(*db_.getConnection());
+        pqxx::result r = txn.exec_params(
+            "SELECT 1 FROM users WHERE email = $1",
+            email
+        );
         return !r.empty();
     } catch (const std::exception& e) {
-        std::cerr << "Error checking email registration: " << e.what() << std::endl;
+        std::cerr << "Error checking email existence: " << e.what() << std::endl;
         return false;
     }
 }

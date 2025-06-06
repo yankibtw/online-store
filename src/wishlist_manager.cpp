@@ -40,7 +40,7 @@ std::vector<Product> WishlistManager::getFavoritesBySessionId(const std::string&
         );
 
         if (r.empty()) {
-            throw std::runtime_error("Сессия не найдена");
+            throw std::runtime_error("invalid-session");
         }
 
         std::string user_id = r[0]["user_id"].as<std::string>();
@@ -68,6 +68,7 @@ std::vector<Product> WishlistManager::getFavoritesBySessionId(const std::string&
         }
     } catch (const std::exception& e) {
         std::cerr << "Error fetching favorite products: " << e.what() << std::endl;
+        throw;
     }
     return products;
 }

@@ -12,14 +12,20 @@ Database::~Database() {
 }
 
 std::string Database::extractSessionId(const std::string& cookieHeader) {
+    auto trim = [](const std::string& s) -> std::string {
+        size_t start = s.find_first_not_of(' ');
+        size_t end = s.find_last_not_of(' ');
+        if (start == std::string::npos) return "";
+        return s.substr(start, end - start + 1);
+    };
+
     std::istringstream ss(cookieHeader);
     std::string token;
     while (std::getline(ss, token, ';')) {
         auto pos = token.find('=');
         if (pos != std::string::npos) {
-            std::string key = token.substr(0, pos);
-            std::string value = token.substr(pos + 1);
-            while (!key.empty() && key.front() == ' ') key.erase(0, 1);
+            std::string key = trim(token.substr(0, pos));
+            std::string value = trim(token.substr(pos + 1));
             if (key == "session_id") return value;
         }
     }

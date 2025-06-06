@@ -55,9 +55,11 @@ Product ProductManager::getProductById(int id) {
             "SELECT p.id, p.name, "
             "COALESCE(b.name, 'Без бренда') AS brand, "
             "COALESCE(pi.image_url, '/static/img/default.png') AS image_url, "
-            "p.price, p.discount_price, "
+            "p.price, "
+            "COALESCE(p.discount_price, 0.0) AS discount_price, "
             "COALESCE(p.description, '') AS description, "
-            "pv.sku, "
+            "COALESCE(pv.sku, '') AS sku, "
+            "COALESCE(pv.stock_quantity, 0) AS stock_quantity, "
             "COALESCE(c.name, 'Без категории') AS category, "
             "COALESCE(pc.name, 'Без категории') AS parent_category "
             "FROM products p "
@@ -65,7 +67,10 @@ Product ProductManager::getProductById(int id) {
             "LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_main = true "
             "LEFT JOIN categories c ON p.category_id = c.id "
             "LEFT JOIN categories pc ON c.parent_id = pc.id "
-            "LEFT JOIN product_variants pv ON p.id = pv.product_id "
+            "LEFT JOIN LATERAL ("
+            "   SELECT sku, stock_quantity FROM product_variants "
+            "   WHERE product_id = p.id LIMIT 1"
+            ") pv ON true "
             "WHERE p.id = $1 "
             "LIMIT 1", id
         );
@@ -79,7 +84,8 @@ Product ProductManager::getProductById(int id) {
             p.price = row["price"].as<double>();
             p.discount_price = row["discount_price"].as<double>();
             p.description = row["description"].as<std::string>();
-            p.sku = row["sku"].is_null() ? "" : row["sku"].as<std::string>();
+            p.sku = row["sku"].as<std::string>();
+            p.stock_quantity = row["stock_quantity"].as<int>();
             p.category = row["category"].as<std::string>();
             p.parent_category = row["parent_category"].as<std::string>();
         } else {

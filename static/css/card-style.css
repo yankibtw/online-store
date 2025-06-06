@@ -47,7 +47,7 @@ html, body {
 }
 
 .card-info{
-    min-width: 480px;
+    max-width: 480px;
     margin-right: 250px;
 }
 

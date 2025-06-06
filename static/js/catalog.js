@@ -1,5 +1,5 @@
 let currentPage = 1;
-const productsPerPage = 6;
+const productsPerPage = 12;
 let filteredProducts = null;
 
 function setupSearch() {

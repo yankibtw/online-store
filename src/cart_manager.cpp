@@ -102,7 +102,7 @@ std::vector<CartProduct> CartManager::getCartBySessionId(const std::string& sess
     return items;
 }
 
-bool CartManager::removeFromCart(const std::string& session_id, int product_id) {
+bool CartManager::removeFromCart(const std::string& session_id, int cart_item_id) {
     try {
         pqxx::work W(*db_.getConnection());
         
@@ -114,10 +114,10 @@ bool CartManager::removeFromCart(const std::string& session_id, int product_id) 
             return false;
         }
 
-        std::string user_id = r[0]["user_id"].as<std::string>();
+        int user_id = r[0]["user_id"].as<int>();
         W.exec_params(
             "DELETE FROM cart_items WHERE user_id = $1 AND id = $2",
-            user_id, product_id
+            user_id, cart_item_id
         );
 
         W.commit();
